@@ -60,6 +60,7 @@ public class Calendar extends AppCompatActivity {
     private PopupMenu popupMenu;
     private int writetype=0;
    //주노형 바보
+    //문선민 바보
     //firebase auth object
     private static FirebaseAuth firebaseAuth;
 
