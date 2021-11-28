@@ -1,4 +1,4 @@
-package com.example.diary;
+package com.koreatech.diary;
 
 
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.koreatech.diary.R;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -59,7 +61,7 @@ public class SignUpActivity extends AppCompatActivity {
                             finish();
                         } else {
                             // 계정이 중복된 경우
-                            Toast.makeText(SignUpActivity.this, "이미 존재하는 계정입니다.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this, "이미 존재하는 계정 또는 비밀번호를 6자리 이상 입력하세요", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

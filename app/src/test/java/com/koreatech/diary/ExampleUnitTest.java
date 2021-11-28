@@ -1,4 +1,4 @@
-package com.example.diary;
+package com.koreatech.diary;
 
 import static org.junit.Assert.*;
 

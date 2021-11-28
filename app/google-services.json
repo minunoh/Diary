@@ -1,23 +1,24 @@
 {
   "project_info": {
     "project_number": "993432074866",
+    "firebase_url": "https://diary-ab109-default-rtdb.firebaseio.com",
     "project_id": "diary-ab109",
     "storage_bucket": "diary-ab109.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:993432074866:android:18657d46d5f25211f6a0eb",
+        "mobilesdk_app_id": "1:993432074866:android:dc04f4fb85964f1ff6a0eb",
         "android_client_info": {
-          "package_name": "com.example.diary"
+          "package_name": "com.koreatech.diary"
         }
       },
       "oauth_client": [
         {
-          "client_id": "993432074866-1do084afvkto6q8ld6q1e3nph9tlaisp.apps.googleusercontent.com",
+          "client_id": "993432074866-rtrpll2f2d1uk0rahs8j15q4h429bg0l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.diary",
+            "package_name": "com.koreatech.diary",
             "certificate_hash": "51db83c6fefae8150ad933f7ae17ec9d014fa13b"
           }
         },

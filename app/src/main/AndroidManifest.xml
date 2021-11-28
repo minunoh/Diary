@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.diary">
+    package="com.koreatech.diary">
 
     <application
         android:allowBackup="true"
@@ -10,13 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Diary">
         <activity
-            android:name=".SignUpActivity"
+            android:name="com.koreatech.diary.SignUpActivity"
             android:exported="true" />
         <activity
-            android:name=".Calendar"
+            android:name="com.koreatech.diary.Calendar"
             android:exported="true" />
         <activity
-            android:name=".LoginActivity"
+            android:name="com.koreatech.diary.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.koreatech.diary.MainActivity"
             android:exported="true" />
     </application>
 

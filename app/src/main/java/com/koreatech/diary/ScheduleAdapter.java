@@ -1,4 +1,4 @@
-package com.example.diary;
+package com.koreatech.diary;
 
 import android.content.Context;
 import android.view.ContextMenu;
@@ -11,12 +11,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.koreatech.diary.R;
+
 import java.util.ArrayList;
 
-public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> {
+public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder> {
 
 
-    ArrayList<DiaryData> items = new ArrayList<DiaryData>();
+    ArrayList<ScheduleData> items = new ArrayList<ScheduleData>();
     private Context mContext;
 
     @NonNull
@@ -29,7 +31,7 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        DiaryData item = items.get(position);
+        ScheduleData item = items.get(position);
         holder.setItem(item);
     }
 
@@ -43,15 +45,15 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
         return items.size();
     }
 
-    public void addItem(DiaryData item) {
+    public void addItem(ScheduleData item) {
         items.add(item);
     }
 
-    public void setItems(ArrayList<DiaryData> items) {
+    public void setItems(ArrayList<ScheduleData> items) {
         this.items = items;
     }
 
-    public DiaryData getItem(int position) {
+    public ScheduleData getItem(int position) {
         return items.get(position);
     }
 
@@ -105,7 +107,7 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
         };
 
 
-        public void setItem(DiaryData item) {
+        public void setItem(ScheduleData item) {
             content.setText(item.getContent());
             title.setText(item.getTitle());
 

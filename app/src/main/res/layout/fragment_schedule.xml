@@ -14,7 +14,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.example.diary.RecyclerViewEmptySupport
+            <com.koreatech.diary.RecyclerViewEmptySupport
 
                 android:id="@+id/scheduleRecyclerView"
                 android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.example.diary;
+package com.koreatech.diary;
 
 public class DiaryData {
     private String content;
