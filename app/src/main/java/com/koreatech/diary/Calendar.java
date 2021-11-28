@@ -1,6 +1,7 @@
 package com.koreatech.diary;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -99,15 +100,15 @@ public class Calendar extends AppCompatActivity {
             public void onClick(View v) {
                 if(writetype==0) {
                     //일정 작성페이지로 이동
-                    /*
-                    Intent intent = new Intent(Calendar.this, test.class);
-                    startActivity(intent);*/
+
+                    Intent intent = new Intent(Calendar.this, WScheduleActivity.class);
+                    startActivity(intent);
                 }
                 else if(writetype==1){
                     //다이어리 작성페이지로 이동
-                    /*
-                    Intent intent = new Intent(Calendar.this, test.class);
-                    startActivity(intent);*/
+
+                    Intent intent = new Intent(Calendar.this, WDiaryActivity.class);
+                    startActivity(intent);
                 }
             }
         });

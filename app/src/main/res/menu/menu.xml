@@ -23,9 +23,13 @@
         android:icon = "@drawable/ic_camera"
        />
         <item
-            android:title=""/>
+            android:id="@+id/M_calendar"
+            android:title="cal"
+            android:icon="@drawable/ic_calender"/>
         <item
-            android:title=""/>
+            android:id="@+id/M_mydiary"
+            android:title="나의 다이어리"
+            android:icon="@drawable/ic_mydiary"/>
         <item
             android:title=""/>
         <item

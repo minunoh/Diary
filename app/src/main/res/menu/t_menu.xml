@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title = "여행"/>
+    <item
+        android:title = "요리"/>
+    <item
+        android:title = "일상"/>
+    <item
+        android:title = "운동"/>
+    <item
+        android:title = "공부"/>
+    <item
+        android:title = "트러블"/>
+    <item
+        android:title = "비밀"/>
+    <item
+        android:title = "예술"/>
+</menu>
