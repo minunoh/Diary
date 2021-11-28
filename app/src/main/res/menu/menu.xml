@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="single">
+    <item
+        android:id="@+id/M_home"
+        android:title = "홈"
+        android:icon = "@drawable/ic_home"
+        />
+    <item
+        android:id="@+id/M_diary"
+        android:title = "다이어리 작성"
+        android:icon = "@drawable/ic_write"
+        />
+    <item
+        android:id="@+id/M_tdlist"
+        android:title = "일정/가계부 작성"
+        android:icon = "@drawable/ic_write"
+        />
+    <item
+        android:id="@+id/M_picture"
+        android:title = "사진보기"
+        android:icon = "@drawable/ic_camera"
+       />
+        <item
+            android:title=""/>
+        <item
+            android:title=""/>
+        <item
+            android:title=""/>
+        <item
+            android:title=""/>
+        <item
+            android:title=""/>
+        <item
+            android:title=""/>
+        <item
+            android:title=""/>
+
+    <item
+        android:id="@+id/M_log"
+        android:title = "로그아웃"
+        android:icon = "@drawable/ic_logout"
+       />
+    <item
+        android:id="@+id/M_setting"
+        android:title = "설정"
+        android:icon = "@drawable/ic_setting"
+        />
+    </group>
+</menu>
