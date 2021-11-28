@@ -44,7 +44,7 @@ public class SignUpActivity extends AppCompatActivity {
                     // 이메일과 비밀번호가 공백인 경우
                     Toast.makeText(SignUpActivity.this, "계정과 비밀번호를 입력하세요.", Toast.LENGTH_LONG).show();
                 }
-            }aa
+            }
         });
     }
 
