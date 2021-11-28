@@ -61,7 +61,7 @@
                     android:background="#FFFFFF"
                     android:elevation="500dp"
                     android:onClick="onClick"
-                    app:srcCompat="@drawable/ic_lock" />
+                    app:srcCompat="@drawable/lock" />
 
 
 

@@ -27,6 +27,12 @@
         <activity
             android:name="com.koreatech.diary.MainActivity"
             android:exported="true" />
+        <activity android:name=".WDiaryActivity"
+            android:exported="true"/>
+        <activity android:name=".WScheduleActivity"
+            android:exported="true"/>
+        <activity android:name=".MydiaryActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

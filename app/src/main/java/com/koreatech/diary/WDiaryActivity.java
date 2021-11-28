@@ -126,6 +126,7 @@ public class WDiaryActivity extends AppCompatActivity {
             tog%=2;
         }else if(ViewId == R.id.iv_save){
             if(diary_content.getText().toString().equals(""))return;
+
             // 저장
             Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
 
