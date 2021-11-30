@@ -48,6 +48,7 @@ public class WDiaryActivity extends AppCompatActivity {
     private PopupMenu popupMenu;
     private Button B_Theme; //
     int tog = 1;
+    boolean openck = true;
     long mNow;
     Date mDate;
     SimpleDateFormat today1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -122,8 +123,10 @@ public class WDiaryActivity extends AppCompatActivity {
             view.setActivated(!view.isActivated());
             if(tog ==1){
                 Toast.makeText(getApplicationContext(), "다이어리 비공개", Toast.LENGTH_SHORT).show();
+                openck = false;
             }else{
                 Toast.makeText(getApplicationContext(), "다이어리 공개", Toast.LENGTH_SHORT).show();
+                openck = true;
             }
             tog++;
             tog%=2;
@@ -133,7 +136,7 @@ public class WDiaryActivity extends AppCompatActivity {
             // 저장
             Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
 
-            addDiary(true,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString()); // diary 데이터 푸쉬
+            addDiary(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString()); // diary 데이터 푸쉬
             RecyclerViewItem item = new RecyclerViewItem(user.getUid(),TDate.getText().toString()
                    ,B_Theme.getText().toString(),diary_content.getText().toString());
             //mDatabaseReference.child("Diary").child(B_Theme.getText().toString()).push().setValue(item); // 데이터 푸쉬

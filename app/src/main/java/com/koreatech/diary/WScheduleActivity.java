@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,16 +19,35 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class WScheduleActivity extends AppCompatActivity {
+
+    //firebase auth object
+    private static FirebaseAuth firebaseAuth;
+
+    //firebase data object
+    private static DatabaseReference mDatabaseReference; // 데이터베이스의 주소를 저장합니다.
+    private static FirebaseDatabase mFirebaseDatabase; // 데이터베이스에 접근할 수 있는 진입점 클래스입니다.
+    private static FirebaseUser user;
     private ImageView ivMenu;
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private TextView TDate;
     private NavigationView navigationView;
+    private EditText eventday;
+    private EditText event;
+    private EditText eventlist;
     Date mDate;
     long mNow;
     SimpleDateFormat today1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -42,9 +62,15 @@ public class WScheduleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wschedule);
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference();
         TDate = findViewById(R.id.Date);
         TDate.setText(getTime());  //날짜 입력
-
+        event = findViewById(R.id.et_event);
+        eventlist = findViewById(R.id.schdulelist);
+        eventday = findViewById(R.id.et_Date);
         // 네비게이션 드로어 + 툴바 설정
         ivMenu = findViewById(R.id.iv_menu);
         drawerLayout = findViewById(R.id.drawer);
@@ -83,6 +109,10 @@ public class WScheduleActivity extends AppCompatActivity {
         if (ViewId == R.id.iv_menu) {  // 햄버거 버튼 클릭시 네비게이션 드로어
             drawerLayout.openDrawer(GravityCompat.START);
         }else if(ViewId == R.id.ib_addtodo){ // 일정추가 버튼
+            addSchedule(eventday.getText().toString(),event.getText().toString(),eventlist.getText().toString());
+            event.setText("");
+
+
             Toast.makeText(getApplicationContext(), "일정 추가", Toast.LENGTH_SHORT).show();
         }else if(ViewId==R.id.et_Date){  // Todolist 날짜설정
             Calendar cal = Calendar.getInstance();
@@ -98,7 +128,7 @@ public class WScheduleActivity extends AppCompatActivity {
         @Override
         public void onDateSet(DatePicker datePicker, int yy, int mm, int dd) {
             TextView date = findViewById(R.id.et_Date);
-            date.setText(String.format("%d/%d/%d",yy,mm+1,dd));
+            date.setText(String.format("%d-%d-%d",yy,mm+1,dd));
         }
     };
 
@@ -123,4 +153,9 @@ public class WScheduleActivity extends AppCompatActivity {
 
         }
     };
+    public void addSchedule(String day, String title, String content){
+        ScheduleData scheduleData = new ScheduleData(day,title,content);
+        mDatabaseReference.child("Schedule").child(user.getUid()).child(day).child(title).setValue(scheduleData);
+        finish();
+    }
 }
