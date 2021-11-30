@@ -16,21 +16,43 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class MydiaryActivity extends AppCompatActivity{
+    //firebase auth object
+    private static FirebaseAuth firebaseAuth;
+
+    //firebase data object
+    private static DatabaseReference mDatabaseReference; // 데이터베이스의 주소를 저장합니다.
+    private static FirebaseDatabase mFirebaseDatabase; // 데이터베이스에 접근할 수 있는 진입점 클래스입니다.
+    private static FirebaseUser user;
     private RecyclerView mRecyclerView;
-    private ArrayList<RecyclerViewItem> mList;
+    private ArrayList<DiaryData> mList;
     private RecyclerViewAdapter mRecyclerViewAdapter;
     private ImageView ivMenu;
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
+    private DiaryData diaryData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mydiary);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference();
+
         ivMenu = findViewById(R.id.iv_menu);
         drawerLayout = findViewById(R.id.drawer);
         toolbar = findViewById(R.id.toolbar);
@@ -60,30 +82,55 @@ public class MydiaryActivity extends AppCompatActivity{
             }
         });
 
+
         firstInit();// 리스트에 있는거
 
-        for(int i=0;i<5;i++){   // 아이템 추가(child 수로 변경해야할듯)
-            addItem("xxxx-xx-xx"+i,"운동","나는~~");
+        mDatabaseReference =mDatabaseReference.child("Diary").child(user.getUid());
+        if(mDatabaseReference!=null){
+            mDatabaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(mList!=null)
+                        mList.clear();
+
+                    for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                        //mList.add(snapshot.getValue(DiaryData.class));
+                        addItem(dataSnapshot.getValue(DiaryData.class));
+                    }
+
+                    mRecyclerViewAdapter.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
         }
+
 
         mRecyclerViewAdapter = new RecyclerViewAdapter(mList);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
-    public void firstInit(){  // 있던거  설정
+
+
+
+
+    public void firstInit(){  // mList를 생성
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        mList = new ArrayList<>();
+        mList = new ArrayList<DiaryData>();
     }
+    // 리스트에 추가
+    public void addItem(DiaryData data){
+        DiaryData item = new DiaryData();
 
-    public void addItem(String date, String theme, String content){
-        RecyclerViewItem item = new RecyclerViewItem();
-
-        item.setDate(date);
-        item.setTheme(theme);
-        item.setContent(content);
+        item.setDay(data.getDay());
+        item.setTheme(data.getTheme());
+        item.setContent(data.getContent());
 
         mList.add(item);
     }
+
     public void onClick(View view) {
         int ViewId = view.getId();
         if (ViewId == R.id.iv_menu) {  // 햄버거 버튼 클릭시 네비게이션 드로어
@@ -112,4 +159,5 @@ public class MydiaryActivity extends AppCompatActivity{
 
         }
     };
+
 }

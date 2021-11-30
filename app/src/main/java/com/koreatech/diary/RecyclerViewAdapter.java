@@ -12,10 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>{
+    private  Context mContext;
+    ArrayList<DiaryData> mList = new ArrayList<DiaryData>();
+
+
     public class ViewHolder extends  RecyclerView.ViewHolder{
         TextView t_date;
         TextView t_theme;
         TextView t_content;
+
         public ViewHolder(@NonNull View itemView){
             super(itemView);
 
@@ -25,9 +30,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         }
     }
-    private ArrayList<RecyclerViewItem> mList = null;  // 아이템 담기는 곳
 
-    public RecyclerViewAdapter(ArrayList<RecyclerViewItem> mList) {
+
+
+
+    public DiaryData getItem(int position) {
+        return mList.get(position);
+    }
+    public RecyclerViewAdapter(ArrayList<DiaryData> mList) {
         this.mList = mList;
     }
     // 아이템 뷰를 위한 뷰홀더 객체를 생성하여 리턴
@@ -44,10 +54,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     // position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RecyclerViewItem item = mList.get(position);
+        DiaryData item = mList.get(position);
 
        // holder.imgView_item.setImageResource(R.drawable.ic_launcher_background);   // 사진 없어서 기본 파일로 이미지 띄움
-        holder.t_date.setText(item.getDate());
+        holder.t_date.setText(item.getDay());
         holder.t_theme.setText(item.getTheme());
         holder.t_content.setText(item.getContent());
     }

@@ -20,15 +20,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
 public class WDiaryActivity extends AppCompatActivity {
-
+    static int count =0;
     //firebase auth object
     private static FirebaseAuth firebaseAuth;
 
@@ -83,7 +86,7 @@ public class WDiaryActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-
+        mDatabaseReference = mFirebaseDatabase.getReference();
         // 네비게이션 바 클릭 이벤트 설정
         navigationView =(NavigationView) findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -130,10 +133,10 @@ public class WDiaryActivity extends AppCompatActivity {
             // 저장
             Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
 
+            addDiary(true,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString()); // diary 데이터 푸쉬
             RecyclerViewItem item = new RecyclerViewItem(user.getUid(),TDate.getText().toString()
-                    ,B_Theme.getText().toString(),diary_content.getText().toString());
-            mDatabaseReference.child("Diary").child(B_Theme.getText().toString()).push().setValue(item); // 데이터 푸쉬
-
+                   ,B_Theme.getText().toString(),diary_content.getText().toString());
+            //mDatabaseReference.child("Diary").child(B_Theme.getText().toString()).push().setValue(item); // 데이터 푸쉬
             Intent intent = new Intent(WDiaryActivity.this,MydiaryActivity.class);
             startActivity(intent);
         }else if(ViewId == R.id.iv_clock){  // 시간 가져오기
@@ -179,6 +182,28 @@ public class WDiaryActivity extends AppCompatActivity {
         }
     };
 
+    public void addDiary(boolean open, String theme, String date, String content){
+        DiaryData diaryData = new DiaryData(open,theme,content,date);
+        /*mDatabaseReference.child("Diary").child(user.getUid()).child(date).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String value = snapshot.getValue(String.class);
+                if(value!=null){
+                    //count ++;
+                    //String countt = Integer.toString(count);
+                    mDatabaseReference.child("Diary").child(user.getUid()).child(date+"-"+countt).setValue(diaryData);
+                }else{
+                    mDatabaseReference.child("Diary").child(user.getUid()).child(date).setValue(diaryData);
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });*/
+        mDatabaseReference.child("Diary").child(user.getUid()).child(date).setValue(diaryData);
+        finish();
+
+    }
 
 }
