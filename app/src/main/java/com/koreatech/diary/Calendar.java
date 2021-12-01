@@ -140,7 +140,7 @@ public class Calendar extends AppCompatActivity {
         fragmentDiary.update(checkYear, checkMonth, checkDay);
 
         // 첫시작 할 때 일정이 있으면 캘린더에 dot(새싹)으로 표시해주기
-        mFirebaseDatabase.getReference().child("schedule").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+        mFirebaseDatabase.getReference().child("Schedule").child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //일정데이터가 변경될 때 onDataChange함수 발생
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -243,7 +243,7 @@ public class Calendar extends AppCompatActivity {
         }
 
         static void update(int year, int month, int day) {
-            showDB(year, month, day, "schedule");
+            showDB(year, month, day, "Schedule");
 
 
         }
@@ -285,7 +285,7 @@ public class Calendar extends AppCompatActivity {
         }
 
         static void update(int year, int month, int day) {
-            showDB(year, month, day, "diary");
+            showDB(year, month, day, "Diary");
 
 
         }
@@ -293,9 +293,16 @@ public class Calendar extends AppCompatActivity {
 
 
     public static void showDB(int year, int month, int day, String type) {
+        String stringday="";
+        if(day<10){
+            stringday= String.valueOf("0"+day);
+        }
+        else{
+            stringday =String.valueOf(day);
+        }
 
-        mDatabaseReference = mFirebaseDatabase.getReference().child(type).child(user.getUid()).child(year + "-" + (month + 1) + "-" + day);
-        if (type.equals("schedule")) {
+        mDatabaseReference = mFirebaseDatabase.getReference().child(type).child(user.getUid()).child(year + "-" + (month + 1) + "-" + stringday);
+        if (type.equals("Schedule")) {
             if (mDatabaseReference != null) {
                 mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -322,7 +329,7 @@ public class Calendar extends AppCompatActivity {
 
 
             }
-        } else if (type.equals("diary")) {
+        } else if (type.equals("Diary")) {
             if (mDatabaseReference != null) {
                 mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

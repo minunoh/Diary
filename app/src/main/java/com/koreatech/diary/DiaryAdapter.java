@@ -11,8 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.koreatech.diary.R;
-
 import java.util.ArrayList;
 
 public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> {
@@ -25,7 +23,7 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View itemView = inflater.inflate(R.layout.detaillist_item, parent, false);
+        View itemView = inflater.inflate(R.layout.diary_item, parent, false);
         return new ViewHolder(itemView);
     }
 
@@ -60,12 +58,12 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
     class ViewHolder extends RecyclerView.ViewHolder implements  View.OnCreateContextMenuListener{
 
         TextView content;
-        TextView title;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            title = itemView.findViewById(R.id.detailListTitle);
+
             content = itemView.findViewById(R.id.detailListContext);
             itemView.setOnCreateContextMenuListener(this);
         }
@@ -109,7 +107,7 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
 
         public void setItem(DiaryData item) {
             content.setText(item.getContent());
-            title.setText(item.getTitle());
+
 
         }
 

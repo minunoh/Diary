@@ -185,7 +185,7 @@ public class WDiaryActivity extends AppCompatActivity {
     };
 
     public void addDiary(boolean open,String theme, String date, String content){
-        DiaryData diaryData = new DiaryData(open,theme,content,date);
+        DiaryData diaryData = new DiaryData(open,theme,content,date, getTime2());
         mDatabaseReference.child("Diary").child(user.getUid()).child(date).child(getTime2()).setValue(diaryData);
         finish();
 

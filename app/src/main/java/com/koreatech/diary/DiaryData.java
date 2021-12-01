@@ -6,17 +6,19 @@ public class DiaryData {
     private String theme;// 테마
     private String name; // ID
     private String day; // 날짜
+    private String time;
     private boolean open ;
     public DiaryData() { }
     //Diary-
     // ID-
     //    날짜,
     //        테마,공개여부,작성글(DiaryData)
-    public DiaryData(boolean open, String theme,String content,String day){
+    public DiaryData(boolean open, String theme,String content,String day, String time){
         this.open = open;
         this.theme = theme;
         this.content= content;
         this.day = day;
+        this.time =time;
     }
 
     public boolean getOpen(){return open;}
@@ -31,6 +33,14 @@ public class DiaryData {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public String getTime() {
+        return time;
+    }
+    public void setTime(String time) {
+        this.time = time;
+    }
+
 
     public String getDay() {
         return day;
