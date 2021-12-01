@@ -110,6 +110,11 @@ public class WDiaryActivity extends AppCompatActivity {
                     startActivity(intent);
                     return true;
                 }
+                /*else if(mid == R.id.M_){
+                    Intent intent = new Intent(WDiaryActivity.this,Calendar.class);
+                    startActivity(intent);
+                    return true;
+                }*/
                 return true;
             }
         });
@@ -136,7 +141,7 @@ public class WDiaryActivity extends AppCompatActivity {
             // 저장
             Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
 
-            addDiary(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString()); // diary 데이터 푸쉬
+            addDiary(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString(),getTime2()); // diary 데이터 푸쉬
             RecyclerViewItem item = new RecyclerViewItem(user.getUid(),TDate.getText().toString()
                    ,B_Theme.getText().toString(),diary_content.getText().toString());
             Intent intent = new Intent(WDiaryActivity.this,MydiaryActivity.class);
@@ -184,9 +189,9 @@ public class WDiaryActivity extends AppCompatActivity {
         }
     };
 
-    public void addDiary(boolean open,String theme, String date, String content){
+    public void addDiary(boolean open,String theme, String date, String content, String time){
         DiaryData diaryData = new DiaryData(open,theme,content,date);
-        mDatabaseReference.child("Diary").child(user.getUid()).child(date).child(getTime2()).setValue(diaryData);
+        mDatabaseReference.child("Diary").child(user.getUid()).child(date).child(time).setValue(diaryData);
         finish();
 
     }

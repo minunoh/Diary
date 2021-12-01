@@ -7,6 +7,7 @@ public class DiaryData {
     private String name; // ID
     private String day; // 날짜
     private boolean open ;
+    private String time;
     public DiaryData() { }
     //Diary-
     // ID-
@@ -18,6 +19,9 @@ public class DiaryData {
         this.content= content;
         this.day = day;
     }
+
+    public String getTime(){return  time;}
+    public void setTime(String time){this.time = time;}
 
     public boolean getOpen(){return open;}
     public void setOpen(Boolean open){this.open = open;}

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +44,7 @@ public class MydiaryActivity extends AppCompatActivity{
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DiaryData diaryData;
+    private TextView D_date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +98,6 @@ public class MydiaryActivity extends AppCompatActivity{
                     for(DataSnapshot dataSnapshot : snapshot.getChildren().iterator().next().getChildren()){
                             addItem(dataSnapshot.getValue(DiaryData.class));
 
-                        //mList.add(snapshot.getValue(DiaryData.class));
-
                     }
 
                     mRecyclerViewAdapter.notifyDataSetChanged();
@@ -112,6 +113,7 @@ public class MydiaryActivity extends AppCompatActivity{
         mRecyclerViewAdapter = new RecyclerViewAdapter(mList);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
 
@@ -131,14 +133,23 @@ public class MydiaryActivity extends AppCompatActivity{
             mList.add(item);
         }
     }
+    /*public void deleteItem( final int position){
+        mDatabaseReference.child("Diary").child(D_date.getText().toString());
+        if(mDatabaseReference!=null)
+            mDatabaseReference.addValueEventListener()
+    }*/
+
 
     public void onClick(View view) {
         int ViewId = view.getId();
         if (ViewId == R.id.iv_menu) {  // 햄버거 버튼 클릭시 네비게이션 드로어
             drawerLayout.openDrawer(GravityCompat.START);
+        }else if(ViewId == R.id.b_delete){
+            D_date = (TextView)findViewById(R.id.t_MyDiaryDate);
+
+            Toast.makeText(this,"다이어리삭제",Toast.LENGTH_SHORT).show();
         }
     }
-
     DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
         @Override
         public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
