@@ -92,10 +92,11 @@ public class MydiaryActivity extends AppCompatActivity{
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(mList!=null)
                         mList.clear();
+                    for(DataSnapshot dataSnapshot : snapshot.getChildren().iterator().next().getChildren()){
+                            addItem(dataSnapshot.getValue(DiaryData.class));
 
-                    for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                         //mList.add(snapshot.getValue(DiaryData.class));
-                        addItem(dataSnapshot.getValue(DiaryData.class));
+
                     }
 
                     mRecyclerViewAdapter.notifyDataSetChanged();
@@ -123,12 +124,12 @@ public class MydiaryActivity extends AppCompatActivity{
     // 리스트에 추가
     public void addItem(DiaryData data){
         DiaryData item = new DiaryData();
-
-        item.setDay(data.getDay());
-        item.setTheme(data.getTheme());
-        item.setContent(data.getContent());
-
-        mList.add(item);
+        if(data.getOpen()==false) {
+            item.setDay(data.getDay());
+            item.setTheme(data.getTheme());
+            item.setContent(data.getContent());
+            mList.add(item);
+        }
     }
 
     public void onClick(View view) {

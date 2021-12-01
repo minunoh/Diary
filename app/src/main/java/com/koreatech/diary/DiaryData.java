@@ -44,6 +44,7 @@ public class DiaryData {
     }
     public void setContent(String content) { this.content = content; }
 
+
 }
 
 

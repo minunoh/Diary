@@ -139,7 +139,6 @@ public class WDiaryActivity extends AppCompatActivity {
             addDiary(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString()); // diary 데이터 푸쉬
             RecyclerViewItem item = new RecyclerViewItem(user.getUid(),TDate.getText().toString()
                    ,B_Theme.getText().toString(),diary_content.getText().toString());
-            //mDatabaseReference.child("Diary").child(B_Theme.getText().toString()).push().setValue(item); // 데이터 푸쉬
             Intent intent = new Intent(WDiaryActivity.this,MydiaryActivity.class);
             startActivity(intent);
         }else if(ViewId == R.id.iv_clock){  // 시간 가져오기
@@ -185,26 +184,9 @@ public class WDiaryActivity extends AppCompatActivity {
         }
     };
 
-    public void addDiary(boolean open, String theme, String date, String content){
+    public void addDiary(boolean open,String theme, String date, String content){
         DiaryData diaryData = new DiaryData(open,theme,content,date);
-        /*mDatabaseReference.child("Diary").child(user.getUid()).child(date).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String value = snapshot.getValue(String.class);
-                if(value!=null){
-                    //count ++;
-                    //String countt = Integer.toString(count);
-                    mDatabaseReference.child("Diary").child(user.getUid()).child(date+"-"+countt).setValue(diaryData);
-                }else{
-                    mDatabaseReference.child("Diary").child(user.getUid()).child(date).setValue(diaryData);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });*/
-        mDatabaseReference.child("Diary").child(user.getUid()).child(date).setValue(diaryData);
+        mDatabaseReference.child("Diary").child(user.getUid()).child(date).child(getTime2()).setValue(diaryData);
         finish();
 
     }

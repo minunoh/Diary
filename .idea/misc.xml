@@ -32,10 +32,13 @@
         <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/drawable-v24/edge.xml" value="0.1" />
         <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/drawable-v24/edgeall.xml" value="0.1" />
         <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/drawable-v24/lock.xml" value="0.1" />
+        <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/drawable/edge_top.xml" value="0.16111111111111112" />
         <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/layout/activity_mydiary.xml" value="0.12512664640324214" />
+        <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/layout/activity_signup.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/layout/activity_wdiary.xml" value="0.12512664640324214" />
         <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/layout/activity_wschedule.xml" value="0.4" />
-        <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/layout/mydiary_item.xml" value="0.12512664640324214" />
+        <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/layout/fragment_diary.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/layout/mydiary_item.xml" value="0.2" />
         <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/menu/menu.xml" value="0.25729166666666664" />
         <entry key="..\:/Users/PILIW2021/Desktop/git_team/app/src/main/res/menu/t_menu.xml" value="0.23703703703703705" />
         <entry key="..\:/Users/joonoh/Git_Local/diary/app/src/main/res/layout/activity_login.xml" value="0.17889492753623187" />
