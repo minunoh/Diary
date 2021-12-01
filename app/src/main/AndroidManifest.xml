@@ -33,6 +33,12 @@
             android:exported="true"/>
         <activity android:name=".MydiaryActivity"
             android:exported="true"/>
+        <activity
+            android:name=".CommentActivity"
+            android:label="Comment"/>
+        <activity
+            android:name=".FeedActivity"
+            android:label="Comment"/>
     </application>
 
 </manifest>
