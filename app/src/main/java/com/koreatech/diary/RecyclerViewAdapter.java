@@ -4,10 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+
 
 import java.util.ArrayList;
 
@@ -16,18 +20,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     ArrayList<DiaryData> mList = new ArrayList<DiaryData>();
 
 
+
     public class ViewHolder extends  RecyclerView.ViewHolder{
         TextView t_date;
         TextView t_theme;
         TextView t_content;
 
+
         public ViewHolder(@NonNull View itemView){
             super(itemView);
-
             t_date =(TextView) itemView.findViewById(R.id.t_MyDiaryDate);
             t_theme= (TextView) itemView.findViewById(R.id.t_MyDiaryTheme);
             t_content= (TextView) itemView.findViewById(R.id.t_MyDiaryContent);
-
         }
     }
 
@@ -60,11 +64,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.t_date.setText(item.getDay());
         holder.t_theme.setText(item.getTheme());
         holder.t_content.setText(item.getContent());
+
+
     }
     @Override
     public int getItemCount() {
         return mList.size();
     }
-
-
 }
+

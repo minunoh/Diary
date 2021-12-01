@@ -10,7 +10,6 @@
         android:layout_height="match_parent"
         tools:openDrawer="start"
         android:fitsSystemWindows="true">
-
         <LinearLayout
 
             android:layout_width="match_parent"
