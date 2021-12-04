@@ -22,7 +22,6 @@ public class DiaryData {
     }
 
 
-
     public boolean getOpen(){return open;}
     public void setOpen(Boolean open){this.open = open;}
 
