@@ -22,8 +22,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,7 +53,7 @@ public class WDiaryActivity extends AppCompatActivity {
     private  final int GALLERY_CODE = 10;
     private FirebaseStorage storage;
     private  Uri file;
-
+    Boolean existFile = false;
     //firebase data object
     private static DatabaseReference mDatabaseReference; // 데이터베이스의 주소를 저장합니다.
     private static FirebaseDatabase mFirebaseDatabase; // 데이터베이스에 접근할 수 있는 진입점 클래스입니다.
@@ -67,6 +70,7 @@ public class WDiaryActivity extends AppCompatActivity {
     boolean openck = true;
     long mNow;
     Date mDate;
+    private String time ="";
     SimpleDateFormat today1 = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat today2 = new SimpleDateFormat("hh:mm:ss");
 
@@ -148,35 +152,56 @@ public class WDiaryActivity extends AppCompatActivity {
             tog%=2;
         }else if(ViewId == R.id.iv_save){
             if(diary_content.getText().toString().equals(""))return;
-
-            // 저장
-            Toast.makeText(getApplicationContext(), "저장 완료", Toast.LENGTH_SHORT).show();
-
-            addDiary(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString()); // diary 데이터 푸쉬
-            RecyclerViewItem item = new RecyclerViewItem(user.getUid(),TDate.getText().toString()
-                   ,B_Theme.getText().toString(),diary_content.getText().toString());
+            time= getTime2();
 
 
             //이미지 저장 (파이어 스토어에)
             //사진이 존재한다면
             if(file!=null) {
 
+
+
                 StorageReference storageRef = storage.getReference();
-                StorageReference riversRef = storageRef.child(user.getUid()).child("photo/1.png");
-                UploadTask uploadTask = riversRef.putFile(file);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(WDiaryActivity.this, "사진이 정상적으로 업로드 되지 않았습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(WDiaryActivity.this, "사진이 정상적으로 업로드 되었습니다.", Toast.LENGTH_SHORT).show();
-                        file=null;
-                    }
-                });
+                StorageReference riversRef=storageRef.child(user.getUid()).child("photo").child(time+".png");
+
+                riversRef.putFile(file)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                            @Override
+
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+
+                                    @Override
+
+                                    public void onSuccess(Uri uri) {
+                                        String imgurl = uri.toString();
+                                        GalleryData galleryData = new GalleryData(imgurl,time+".png",time);
+                                        mDatabaseReference.child("Gallery").child(user.getUid()).child(time).setValue(galleryData);
+
+                                    }
+
+                                });
+
+                            }
+
+                        });
+                existFile=true;
             }
+
+
+
+
+            // 저장
+
+            addDiary(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString()); // diary 데이터 푸쉬
+            RecyclerViewItem item = new RecyclerViewItem(user.getUid(),TDate.getText().toString()
+                   ,B_Theme.getText().toString(),diary_content.getText().toString());
+
+
+            existFile=false;
+
             Intent intent = new Intent(WDiaryActivity.this,MydiaryActivity.class);
             startActivity(intent);
         }else if(ViewId == R.id.iv_clock){  // 시간 가져오기
@@ -229,8 +254,15 @@ public class WDiaryActivity extends AppCompatActivity {
     };
 
     public void addDiary(boolean open,String theme, String date, String content){
-        DiaryData diaryData = new DiaryData(open,theme,content,date, getTime2());
-        mDatabaseReference.child("Diary").child(user.getUid()).child(date).child(getTime2()).setValue(diaryData);
+        DiaryData diaryData;
+        if(existFile) {
+          diaryData = new DiaryData(open, theme, content, date, time,time+".png" );
+
+        }
+        else{
+                diaryData = new DiaryData(open, theme, content, date, time,"" );
+        }
+        mDatabaseReference.child("Diary").child(user.getUid()).child(date).child(time).setValue(diaryData);
         finish();
 
     }

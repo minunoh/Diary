@@ -8,17 +8,29 @@ public class DiaryData {
     private String day; // 날짜
     private String time;
     private boolean open ;
+    private String imagename;
+
+    public String getFilename() {
+        return imagename;
+    }
+
+    public void setFilename(String imagename) {
+        this.imagename =  imagename;;
+    }
+
+
     public DiaryData() { }
     //Diary-
     // ID-
     //    날짜,
     //        테마,공개여부,작성글(DiaryData)
-    public DiaryData(boolean open, String theme,String content,String day, String time){
+    public DiaryData(boolean open, String theme,String content,String day, String time, String imagename){
         this.open = open;
         this.theme = theme;
         this.content= content;
         this.day = day;
         this.time =time;
+        this.imagename=imagename;
     }
 
 

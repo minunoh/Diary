@@ -13,13 +13,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Diary">
         <activity
-            android:name="com.koreatech.diary.SignUpActivity"
+            android:name=".Gallery"
             android:exported="true" />
         <activity
-            android:name="com.koreatech.diary.Calendar"
+            android:name=".SignUpActivity"
             android:exported="true" />
         <activity
-            android:name="com.koreatech.diary.LoginActivity"
+            android:name=".Calendar"
+            android:exported="true" />
+        <activity
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,20 +31,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.koreatech.diary.MainActivity"
+            android:name=".MainActivity"
             android:exported="true" />
-        <activity android:name=".WDiaryActivity"
-            android:exported="true"/>
-        <activity android:name=".WScheduleActivity"
-            android:exported="true"/>
-        <activity android:name=".MydiaryActivity"
-            android:exported="true"/>
+        <activity
+            android:name=".WDiaryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".WScheduleActivity"
+            android:exported="true" />
+        <activity
+            android:name=".MydiaryActivity"
+            android:exported="true" />
         <activity
             android:name=".CommentActivity"
-            android:label="Comment"/>
+            android:label="Comment" />
         <activity
             android:name=".FeedActivity"
-            android:label="Comment"/>
+            android:label="Comment" />
     </application>
 
 </manifest>

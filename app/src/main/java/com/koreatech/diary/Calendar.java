@@ -31,6 +31,7 @@ import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,12 +39,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Calendar extends AppCompatActivity {
     private DrawerLayout drawerLayout;// 드로어되는 창
+    NavigationView navigationView;
     private Toolbar toolbar;// 액션바(툴바)
     static RecyclerViewEmptySupport schedulerecyclerView;
     static RecyclerViewEmptySupport diaryrecyclerView;
@@ -58,8 +61,8 @@ public class Calendar extends AppCompatActivity {
     private FragmentTransaction transaction;
     private ImageView ivMenu;//메뉴버튼
     private PopupMenu popupMenu;
-    private int writetype=0;
-   //주노형 바보
+    private int writetype = 0;
+    //주노형 바보
     //문선민 바보
     //firebase auth object
     private static FirebaseAuth firebaseAuth;
@@ -68,6 +71,7 @@ public class Calendar extends AppCompatActivity {
     private static DatabaseReference mDatabaseReference; // 데이터베이스의 주소를 저장합니다.
     private static FirebaseDatabase mFirebaseDatabase; // 데이터베이스에 접근할 수 있는 진입점 클래스입니다.
     private static FirebaseUser user;
+
 
 
     // 선택한 날짜
@@ -80,6 +84,7 @@ public class Calendar extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calendar);
 
+        navigationView = findViewById(R.id.navigation);
         drawerLayout = findViewById(R.id.drawer);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -93,19 +98,47 @@ public class Calendar extends AppCompatActivity {
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frameLayout, fragmentSchedule, "aa").commitAllowingStateLoss();
 
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                item.setChecked(true);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                int mid = item.getItemId();
+                Intent intent = null;
+
+                if(mid == R.id.M_diary){ // 다이어리 작성
+                    intent=  new Intent(Calendar.this,WDiaryActivity.class);
+                    startActivity(intent);
+                    return true;
+                }else if(mid ==R.id.M_mydiary){ //나의 다이어리 리스트
+                    intent =  new Intent(Calendar.this,MydiaryActivity.class);
+                    startActivity(intent);
+                    return true;
+                }else if(mid == R.id.M_calendar){
+                    intent = new Intent(Calendar.this, java.util.Calendar.class);
+                    startActivity(intent);
+                    return true;
+                }
+                else if(mid== R.id.M_picture){
+                    intent = new Intent(Calendar.this,Gallery.class);
+                    startActivity(intent);
+                    return true;
+                }
+                return true;
+            }
+        });
 
         Button button = (Button) findViewById(R.id.plus_button);
         //일정or다이어리 작성 창 이동
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(writetype==0) {
+                if (writetype == 0) {
                     //일정 작성페이지로 이동
 
                     Intent intent = new Intent(Calendar.this, WScheduleActivity.class);
                     startActivity(intent);
-                }
-                else if(writetype==1){
+                } else if (writetype == 1) {
                     //다이어리 작성페이지로 이동
 
                     Intent intent = new Intent(Calendar.this, WDiaryActivity.class);
@@ -186,7 +219,7 @@ public class Calendar extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     //item을 클릭시 id값을 가져와 FrameLayout에 fragment.xml띄우기
                     case R.id.page_diary:
-                        writetype=1;
+                        writetype = 1;
                         fragmentDiary.update(checkYear, checkMonth, checkDay);
                         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragmentDiary).commit();
 
@@ -194,7 +227,7 @@ public class Calendar extends AppCompatActivity {
 
 
                     case R.id.page_schedule:
-                        writetype=0;
+                        writetype = 0;
                         fragmentSchedule.update(checkYear, checkMonth, checkDay);
                         getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, fragmentSchedule).commit();
 
@@ -293,12 +326,11 @@ public class Calendar extends AppCompatActivity {
 
 
     public static void showDB(int year, int month, int day, String type) {
-        String stringday="";
-        if(day<10){
-            stringday= String.valueOf("0"+day);
-        }
-        else{
-            stringday =String.valueOf(day);
+        String stringday = "";
+        if (day < 10) {
+            stringday = String.valueOf("0" + day);
+        } else {
+            stringday = String.valueOf(day);
         }
 
         mDatabaseReference = mFirebaseDatabase.getReference().child(type).child(user.getUid()).child(year + "-" + (month + 1) + "-" + stringday);
@@ -390,6 +422,9 @@ public class Calendar extends AppCompatActivity {
 
         }
     };
+
+
+
 
     public void onClick(View view) {
         int ViewId = view.getId();
