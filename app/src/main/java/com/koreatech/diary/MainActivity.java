@@ -2,12 +2,15 @@ package com.koreatech.diary;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
@@ -47,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-      /* navigationView =(NavigationView) findViewById(R.id.navigation);
+       navigationView =(NavigationView) findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -69,11 +72,11 @@ public class MainActivity extends AppCompatActivity {
                 }
                 return true;
             }
-        });*/
+        });
 
 
         // 개인정보 페이지로
-        Button tomembership = (Button) findViewById(R.id.tomembership);
+       /* Button tomembership = (Button) findViewById(R.id.tomembership);
         tomembership.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         //달력페이지로
         Button todiary = (Button) findViewById(R.id.todiary);
-        tomembership.setOnClickListener(new View.OnClickListener(){
+        todiary.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view){
@@ -96,15 +99,53 @@ public class MainActivity extends AppCompatActivity {
 
         //커뮤니티페이지로
         Button tocommunity = (Button) findViewById(R.id.tocommunity);
-        tomembership.setOnClickListener(new View.OnClickListener(){
+        tocommunity.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View view){
                 Intent intent = new Intent(MainActivity.this, MydiaryActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
     }
+        public void onClick(View view){
+            int ViewId = view.getId();
+            Intent intent = null;
+            if (ViewId == R.id.iv_menu) {  // 햄버거 버튼 클릭시 네비게이션 드로어
+                drawerLayout.openDrawer(GravityCompat.START);
+            }else if(ViewId == R.id.todiary){  // 다이어리 작성
+                intent = new Intent(MainActivity.this,WDiaryActivity.class);
+                startActivity(intent);
+            }/*else if(ViewId == R.id.tomembership){  // 개인정보
+                intent = new Intent(MainActivity.this,W.class);
+                startActivity(intent);
+            }*/else if(ViewId == R.id.tocommunity){  // 다이어리 작성
+                intent = new Intent(MainActivity.this,FeedActivity.class);
+                startActivity(intent);
+            }
+        }
+
+   /* DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
+        @Override
+        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+        }
+
+        @Override
+        public void onDrawerOpened(@NonNull View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerClosed(@NonNull View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+
+        }
+    };*/
 
 }

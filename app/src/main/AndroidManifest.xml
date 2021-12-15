@@ -45,6 +45,7 @@
             android:label="Comment"/>
         <activity android:name=".FindActivity"
             android:exported="true"/>
+
     </application>
 
 </manifest>

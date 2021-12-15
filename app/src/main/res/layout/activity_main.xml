@@ -6,49 +6,77 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.koreatech.diary.MainActivity">
-    <include layout="@layout/toolbar" />
-    <Button
-        android:id="@+id/tomembership"
-        android:layout_width="320dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="150dp"
-        android:layout_gravity="center"
-        android:text="개인정보">
 
-    </Button>
-
-    <LinearLayout
-        android:id="@+id/box1"
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
+  <LinearLayout
+      android:id="@+id/box_top"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
+
+
+      <include layout="@layout/toolbar" />
 
         <Button
-            android:id="@+id/tocommunity"
-            android:layout_width="150dp"
+            android:id="@+id/tomembership"
+            android:onClick="onClick"
+            android:layout_width="320dp"
             android:layout_height="150dp"
-            android:layout_marginTop="50dp"
-            android:gravity="center"
-            android:layout_marginRight="10dp"
-            android:text="다이어리">
+            android:layout_gravity="center"
+            android:layout_marginTop="150dp"
+            android:text="개인정보">
 
         </Button>
 
-        <Button
-            android:id="@+id/todiary"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="50dp"
+        <LinearLayout
+            android:id="@+id/box1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginLeft="10dp"
-            android:text="커뮤니티">
+            android:orientation="horizontal">
 
-        </Button>
+            <Button
+                android:id="@+id/tocommunity"
+                android:layout_width="150dp"
+                android:onClick="onClick"
+                android:layout_height="150dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:text="커뮤니티">
+
+            </Button>
+
+            <Button
+                android:id="@+id/todiary"
+                android:onClick="onClick"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="50dp"
+                android:gravity="center"
+                android:text="다이어리">
+
+            </Button>
 
 
-    </LinearLayout>
+        </LinearLayout>
+
+     </LinearLayout>
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:headerLayout="@layout/header"
+            app:menu="@menu/menu" />
 
 
-
+    </androidx.drawerlayout.widget.DrawerLayout>
 </LinearLayout>
