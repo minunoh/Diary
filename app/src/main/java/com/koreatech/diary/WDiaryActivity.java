@@ -152,6 +152,10 @@ public class WDiaryActivity extends AppCompatActivity {
             tog%=2;
         }else if(ViewId == R.id.iv_save){
             if(diary_content.getText().toString().equals(""))return;
+            if(B_Theme.getText().toString().equals("테마 설정")){
+               Toast.makeText(getApplicationContext(),"테마를 선택해주세요",Toast.LENGTH_SHORT).show();
+                return;
+            }
             time= getTime2();
 
 
