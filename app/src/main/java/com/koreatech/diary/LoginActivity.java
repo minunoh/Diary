@@ -1,8 +1,5 @@
 package com.koreatech.diary;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,7 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.koreatech.diary.R;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -25,9 +24,11 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editTextPassword;
     private Button buttonLogIn;
     private Button buttonSignUp;
+    private Button buttonFindpw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.Theme_Diary);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -36,12 +37,23 @@ public class LoginActivity extends AppCompatActivity {
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPassword = (EditText) findViewById(R.id.psw);
 
+
         buttonSignUp = (Button) findViewById(R.id.signup);
         buttonSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // SignUpActivity 연결
                 Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        buttonFindpw = (Button) findViewById(R.id.findpw);
+        buttonFindpw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // FindActivity 연결
+                Intent intent = new Intent(LoginActivity.this, FindActivity.class);
                 startActivity(intent);
             }
         });
@@ -63,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    Intent intent = new Intent(LoginActivity.this, Calendar.class);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
@@ -88,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
 
     @Override
     protected void onStart() {

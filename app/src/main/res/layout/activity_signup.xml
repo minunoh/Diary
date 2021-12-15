@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:ems="10"
-        android:hint="E-mail"
+        android:hint="E-mail 형식"
         android:inputType="textEmailAddress"
         android:textColor="@android:color/black" />
 

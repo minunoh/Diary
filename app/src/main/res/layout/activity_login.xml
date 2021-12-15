@@ -30,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:backgroundTint="#FFFFFF"
+            android:inputType="textEmailAddress"
             android:hint="Email">
 
         </EditText>
@@ -45,6 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:backgroundTint="#FFFFFF"
+            android:inputType="textPassword"
             android:hint="Password">
 
       </EditText>
@@ -89,7 +91,8 @@
         android:weightSum="10"
         >
 
-        <TextView
+        <Button
+            android:id="@+id/findpw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -97,7 +100,7 @@
             android:textSize="18sp"
             android:text="패스워드 찾기"
             >
-        </TextView>
+        </Button>
 
         <Button
             android:id="@+id/signup"

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -13,16 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Diary">
         <activity
-            android:name=".Gallery"
+            android:name="com.koreatech.diary.SignUpActivity"
             android:exported="true" />
         <activity
-            android:name=".SignUpActivity"
+            android:name="com.koreatech.diary.Calendar"
             android:exported="true" />
         <activity
-            android:name=".Calendar"
-            android:exported="true" />
-        <activity
-            android:name=".LoginActivity"
+            android:name="com.koreatech.diary.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,23 +29,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.koreatech.diary.MainActivity"
             android:exported="true" />
-        <activity
-            android:name=".WDiaryActivity"
-            android:exported="true" />
-        <activity
-            android:name=".WScheduleActivity"
-            android:exported="true" />
-        <activity
-            android:name=".MydiaryActivity"
-            android:exported="true" />
+        <activity android:name=".WDiaryActivity"
+            android:exported="true"/>
+        <activity android:name=".WScheduleActivity"
+            android:exported="true"/>
+        <activity android:name=".MydiaryActivity"
+            android:exported="true"/>
         <activity
             android:name=".CommentActivity"
-            android:label="Comment" />
+            android:label="Comment"/>
         <activity
             android:name=".FeedActivity"
-            android:label="Comment" />
+            android:label="Comment"/>
+        <activity android:name=".FindActivity"
+            android:exported="true"/>
     </application>
 
 </manifest>

@@ -1,18 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.koreatech.diary.MainActivity">
+    <include layout="@layout/toolbar" />
+    <Button
+        android:id="@+id/tomembership"
+        android:layout_width="320dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="150dp"
+        android:layout_gravity="center"
+        android:text="개인정보">
 
-    <TextView
-        android:layout_width="wrap_content"
+    </Button>
+
+    <LinearLayout
+        android:id="@+id/box1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:gravity="center"
+        android:orientation="horizontal">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/tocommunity"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:layout_marginRight="10dp"
+            android:text="다이어리">
+
+        </Button>
+
+        <Button
+            android:id="@+id/todiary"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:text="커뮤니티">
+
+        </Button>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
