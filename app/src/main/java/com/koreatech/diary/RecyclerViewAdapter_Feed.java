@@ -15,10 +15,10 @@ public class RecyclerViewAdapter_Feed extends RecyclerView.Adapter<RecyclerView.
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
 
-    private List<String> items;
+    private ArrayList<FeedData> mList = new ArrayList<FeedData>();
 
-    public RecyclerViewAdapter_Feed(List<String> items) {
-        this.items = items;
+    public RecyclerViewAdapter_Feed(ArrayList<FeedData> mList) {
+        this.mList = mList;
     }
 
     @NonNull
@@ -44,12 +44,12 @@ public class RecyclerViewAdapter_Feed extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public int getItemViewType(int position) {
-        return items.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        return mList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
 
     @Override
     public int getItemCount() {
-        return items == null ? 0 : items.size();
+        return mList == null ? 0 : mList.size();
     }
 
     private void showLoadingView(LoadingViewHolder holder, int position) {
@@ -57,20 +57,26 @@ public class RecyclerViewAdapter_Feed extends RecyclerView.Adapter<RecyclerView.
     }
 
     private void populateItemRows(ItemViewHolder holder, int position) {
-        String item = items.get(position);
+        FeedData item = mList.get(position);
         holder.setItem(item);
     }
 
     private class ItemViewHolder extends RecyclerView.ViewHolder {
-        private TextView textView;
+        private TextView theme;
+        private TextView day;
+        private TextView content;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.user_id);
+            theme = itemView.findViewById(R.id.feed_theme);
+            day = itemView.findViewById(R.id.feed_uptime);
+            content = itemView.findViewById(R.id.feed_content);
         }
 
-        public void setItem(String item) {
-            textView.setText("사용자 아이디");
+        public void setItem(FeedData mList) {
+            theme.setText(mList.getTheme());
+            day.setText(mList.getDay());
+            content.setText(mList.getContent());
         }
     }
 

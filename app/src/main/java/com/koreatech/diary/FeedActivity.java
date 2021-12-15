@@ -16,48 +16,139 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class FeedActivity extends AppCompatActivity {
-    private Spinner spinner;
+    private static FirebaseAuth firebaseAuth;
+    private static DatabaseReference mDatabaseReference; // 데이터베이스의 주소를 저장합니다.
+    private static FirebaseDatabase mFirebaseDatabase; // 데이터베이스에 접근할 수 있는 진입점 클래스입니다.
+    private static FirebaseUser user;
+
     private RecyclerView recyclerView;
-    private com.koreatech.diary.RecyclerViewAdapter_Feed adapter;
-    private ArrayList<String> items = new ArrayList<>();
-    int like = 1;
-    ImageView Imgv = null;
+    private RecyclerViewAdapter_Feed adapter;
+    final ArrayList<FeedData> mList = new ArrayList<FeedData>();
+    final ArrayList<FeedData> mList_get = new ArrayList<FeedData>();
+    final ArrayList<String> oldPost_get = new ArrayList<String>();
+
+    private Spinner spinner;
 
     private boolean isLoading = false;
+
+    private String spinner_theme = "전체";
+    private String key_storage = null;
+    private String oldestPostId = null;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_feed);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference();
 
         spinner = (Spinner)findViewById(R.id.spinner);
+
+        mDatabaseReference =mDatabaseReference.child("Diary").child(user.getUid());
+        mDatabaseReference.limitToLast(10).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(mList!=null)
+                    mList.clear();
+                for(DataSnapshot dataSnapshot : snapshot.getChildren().iterator().next().getChildren()){
+                    key_storage = dataSnapshot.getKey();
+                    populateData(dataSnapshot.getValue(FeedData.class));
+                }
+                oldestPostId = oldPost_get.get(0);
+                recyclerView = findViewById(R.id.recyclerView);
+                initAdapter();
+                initScrollListener();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //테마 선택시 발생하는 이벤트
+                if(parent.getItemAtPosition(position).toString().equals("전체")){
+                    spinner_theme = "전체";
+                    listRevise();
+                } else if(parent.getItemAtPosition(position).toString().equals("여행")){
+                    spinner_theme = "여행";
+                    listRevise();
+                } else if(parent.getItemAtPosition(position).toString().equals("요리")){
+                    spinner_theme = "요리";
+                    listRevise();
+                } else if(parent.getItemAtPosition(position).toString().equals("일상")){
+                    spinner_theme = "일상";
+                    listRevise();
+                } else if(parent.getItemAtPosition(position).toString().equals("운동")){
+                    spinner_theme = "운동";
+                    listRevise();
+                } else if(parent.getItemAtPosition(position).toString().equals("공부")){
+                    spinner_theme = "공부";
+                    listRevise();
+                } else if(parent.getItemAtPosition(position).toString().equals("트러블")){
+                    spinner_theme = "트러블";
+                    listRevise();
+                } else if(parent.getItemAtPosition(position).toString().equals("비밀")){
+                    spinner_theme = "비밀";
+                    listRevise();
+                } else if(parent.getItemAtPosition(position).toString().equals("예술")){
+                    spinner_theme = "예술";
+                    listRevise();
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //아무것도 선택 안할 시
+
             }
         });
-
-        recyclerView = findViewById(R.id.recyclerView);
-        populateData();
-        initAdapter();
-        initScrollListener();
     }
 
-    private void populateData() {
-        for (int i=0; i<10; i++) {
-            items.add("Item " + i);
+    private void populateData(FeedData data) {
+        //FeedData item = new FeedData();
+        if(data.getOpen()){
+            if(data.getTheme().equals(spinner_theme)){
+                mList.add(0, data);
+                mList_get.add(0, data);
+                oldPost_get.add(key_storage);
+            }else if(spinner_theme.equals("전체")){
+                mList.add(0, data);
+                mList_get.add(0, data);
+                oldPost_get.add(key_storage);
+            }
         }
     }
 
+    private void listRevise(){
+        mDatabaseReference.limitToLast(10).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(mList!=null)
+                    mList.clear();
+                for(DataSnapshot dataSnapshot : snapshot.getChildren().iterator().next().getChildren()){
+                    key_storage = dataSnapshot.getKey();
+                    populateData(dataSnapshot.getValue(FeedData.class));
+                }
+                oldestPostId = oldPost_get.get(0);
+                recyclerView = findViewById(R.id.recyclerView);
+                initAdapter();
+                initScrollListener();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
     private void initAdapter() {
-        adapter = new com.koreatech.diary.RecyclerViewAdapter_Feed(items);
+        adapter = new RecyclerViewAdapter_Feed(mList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
@@ -77,7 +168,7 @@ public class FeedActivity extends AppCompatActivity {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
                 if (!isLoading) {
-                    if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == items.size() - 1) {
+                    if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == mList.size() - 1 && mList_get.size() == 10) {
                         //리스트 마지막
                         loadMore();
                         isLoading = true;
@@ -88,25 +179,45 @@ public class FeedActivity extends AppCompatActivity {
     }
 
     private void loadMore() {
-        items.add(null);
-        adapter.notifyItemInserted(items.size() - 1);
+        mList.add(null);
+        adapter.notifyItemInserted(mList.size() - 1);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                items.remove(items.size() - 1);
-                int scrollPosition = items.size();
+                mList.remove(mList.size() - 1);
+                int scrollPosition = mList.size();
                 adapter.notifyItemRemoved(scrollPosition);
-                int currentSize = scrollPosition;
-                int nextLimit = currentSize + 10;
 
-                while (currentSize - 1 < nextLimit) {
-                    items.add("Item " + currentSize);
-                    currentSize++;
-                }
+                mDatabaseReference.orderByKey().endAt(oldestPostId).limitToLast(20).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        mList_get.clear(); //임시저장 위치
+                        oldPost_get.clear();
+                        for(DataSnapshot dataSnapshot : snapshot.getChildren().iterator().next().getChildren()){
+                            mList_get.add(0,dataSnapshot.getValue(FeedData.class));
+                            oldPost_get.add(dataSnapshot.getKey());
+                        }
 
-                adapter.notifyDataSetChanged();
+                        if(mList.size() > 1) {//1개라도 있으면 불러옴
+                            //마지막 중복되는 부분 삭제
+                            mList_get.remove(0);
+                            //contents 뒤에 추가
+                            mList.addAll(mList_get);
+                            oldestPostId = oldPost_get.get(0);
+                            //메시지 갱신 위치
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            Snackbar.make(getWindow().getDecorView().getRootView(), "마지막 게시물입니다.", Snackbar.LENGTH_SHORT)
+                                    .setAction("닫기", new View.OnClickListener() {@Override public void onClick(View view) {}}).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
                 isLoading = false;
             }
         }, 2000);
@@ -114,20 +225,9 @@ public class FeedActivity extends AppCompatActivity {
 
     public void onClick(View v){
         Intent intent = new Intent(FeedActivity.this, CommentActivity.class);
-        Imgv = (ImageView)findViewById(R.id.like_button);
+
 
         if(v.getId() == R.id.comment_button)
             startActivity(intent);
-        else if(v.getId() == R.id.like_button)
-        {
-            if(like == 1){
-                Imgv.setImageResource(R.drawable.heart_2);
-                like *= -1;
-            }
-            else if(like == -1){
-                Imgv.setImageResource(R.drawable.heart_1);
-                like *= -1;
-            }
-        }
     }
 }
