@@ -9,63 +9,98 @@ public class DiaryData {
     private String time;
     private boolean open ;
     private String imagename;
+    private String imageurl;
 
-    public String getFilename() {
+    public DiaryData(String content, String theme, String day, String time, boolean open, String imagename, String imageurl) {
+        this.content = content;
+        this.theme = theme;
+        this.day = day;
+        this.time = time;
+        this.open = open;
+        this.imagename = imagename;
+        this.imageurl = imageurl;
+    }
+
+    public String getImageurl() {
+        return imageurl;
+    }
+
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+        this.theme = theme;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public boolean getOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
+
+    public String getImagename() {
         return imagename;
     }
 
-    public void setFilename(String imagename) {
-        this.imagename =  imagename;;
+    public void setImagename(String imagename) {
+        this.imagename = imagename;
     }
-
 
     public DiaryData() { }
     //Diary-
     // ID-
     //    날짜,
     //        테마,공개여부,작성글(DiaryData)
-    public DiaryData(boolean open, String theme,String content,String day, String time, String imagename){
-        this.open = open;
-        this.theme = theme;
-        this.content= content;
-        this.day = day;
-        this.time =time;
-        this.imagename=imagename;
-    }
 
 
-    public boolean getOpen(){return open;}
-    public void setOpen(Boolean open){this.open = open;}
 
-    public String getTheme(){return theme;}
-    public void setTheme(String theme){this.theme = theme;}
-
-    public String getTitle() {
-        return title;
-    }
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getTime() {
-        return time;
-    }
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-
-    public String getDay() {
-        return day;
-    }
-    public void setDay(String day) {
-        this.day = day;
-    }
-
-    public String getContent() {
-        return content;
-    }
-    public void setContent(String content) { this.content = content; }
 
 
 }

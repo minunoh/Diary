@@ -11,6 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder> {
@@ -94,9 +101,28 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                         break;
 
                     case 1002://삭제항목 선택시
+                        FirebaseDatabase mDatabase;
+                        DatabaseReference dataRef;
+                        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        mDatabase = FirebaseDatabase.getInstance();
+                        dataRef = mDatabase.getReference();
+                        dataRef.child("Schedule").child(user.getUid()).child(items.get(getAdapterPosition()).getDay()).child(items.get(getAdapterPosition()).getTitle()).removeValue()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() { // DB에서 Fail날경우는 거의 없음..
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // fail ui
+                            }
+                        });
                         items.remove(getAdapterPosition());
                         notifyItemRemoved(getAdapterPosition());
                         notifyItemRangeChanged(getAdapterPosition(), items.size());
+
                         break;
 
                 }

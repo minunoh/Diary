@@ -1,15 +1,26 @@
 package com.koreatech.diary;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -34,10 +45,9 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
     }
 
 
-
     @Override
     public int getItemCount() {
-        if(items==null){
+        if (items == null) {
             return 0;
         }
         return items.size();
@@ -55,7 +65,7 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
         return items.get(position);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements  View.OnCreateContextMenuListener{
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
         TextView content;
 
@@ -90,10 +100,52 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
                         //AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
 
-
                         break;
 
                     case 1002://삭제항목 선택시
+
+                        FirebaseDatabase mDatabase;
+                        DatabaseReference dataRef;
+                        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                        FirebaseUser user = firebaseAuth.getCurrentUser();
+                        mDatabase = FirebaseDatabase.getInstance();
+                        dataRef = mDatabase.getReference();
+                        Log.e("test", String.valueOf(items.get(getAdapterPosition()).getImageurl().length()));
+
+
+
+
+                        //다이어리를 작성할 때 이미지를 넣었다면, 이미지에 대한 정보도 삭제
+                        if (items.get(getAdapterPosition()).getImagename().length()>0 ) {
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                            StorageReference storageRef = storage.getReference();
+                            StorageReference riversRef = storageRef.child(user.getUid()).child("photo").child(items.get(getAdapterPosition()).getImagename());
+                            riversRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+
+                        }
+                        dataRef.child("Gallery").child(user.getUid()).child(items.get(getAdapterPosition()).getTime()).setValue(null);
+                        dataRef.child("Diary").child(user.getUid()).child(items.get(getAdapterPosition()).getDay()).child(items.get(getAdapterPosition()).getTime()).removeValue()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() { // DB에서 Fail날경우는 거의 없음..
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // fail ui
+                            }
+                        });
                         items.remove(getAdapterPosition());
                         notifyItemRemoved(getAdapterPosition());
                         notifyItemRangeChanged(getAdapterPosition(), items.size());
@@ -111,10 +163,8 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
 
         }
 
+
     }
-
-
-
 
 
 }

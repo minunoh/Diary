@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 public class MydiaryActivity extends AppCompatActivity{
     //firebase auth object
@@ -97,16 +98,23 @@ public class MydiaryActivity extends AppCompatActivity{
             mDatabaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(mList!=null)
+                    if (mList != null)
                         mList.clear();
-                    for(DataSnapshot dataSnapshot : snapshot.getChildren().iterator().next().getChildren()){
+                    try {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren().iterator().next().getChildren()) {
                             addItem(dataSnapshot.getValue(DiaryData.class));
+
+                        }
+
+                        mRecyclerViewAdapter.notifyDataSetChanged();
+                    }
+                    catch (NoSuchElementException e) {
 
                     }
 
-                    mRecyclerViewAdapter.notifyDataSetChanged();
-                }
 
+
+                }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                 }

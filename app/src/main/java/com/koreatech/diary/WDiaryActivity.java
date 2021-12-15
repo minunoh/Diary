@@ -2,6 +2,8 @@ package com.koreatech.diary;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,16 +22,24 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -119,10 +129,6 @@ public class WDiaryActivity extends AppCompatActivity {
                     Intent intent = new Intent(WDiaryActivity.this,Calendar.class);
                     startActivity(intent);
                     return true;
-                }else if(mid == R.id.M_home){
-                    Intent intent = new Intent(WDiaryActivity.this,MainActivity.class);
-                    startActivity(intent);
-                    return true;
                 }
                 return true;
             }
@@ -146,17 +152,12 @@ public class WDiaryActivity extends AppCompatActivity {
             tog%=2;
         }else if(ViewId == R.id.iv_save){
             if(diary_content.getText().toString().equals(""))return;
-            if(B_Theme.getText().toString().equals("테마 설정")){
-               Toast.makeText(getApplicationContext(),"테마를 선택해주세요",Toast.LENGTH_SHORT).show();
-                return;
-            }
             time= getTime2();
 
 
             //이미지 저장 (파이어 스토어에)
             //사진이 존재한다면
             if(file!=null) {
-
 
 
                 StorageReference storageRef = storage.getReference();
@@ -177,7 +178,9 @@ public class WDiaryActivity extends AppCompatActivity {
                                         String imgurl = uri.toString();
                                         GalleryData galleryData = new GalleryData(imgurl,time+".png",time);
                                         mDatabaseReference.child("Gallery").child(user.getUid()).child(time).setValue(galleryData);
-
+                                        addDiary(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString(),time+".png",imgurl); // diary 데이터 푸쉬
+                                        RecyclerViewItem item = new RecyclerViewItem(user.getUid(),TDate.getText().toString()
+                                                ,B_Theme.getText().toString(),diary_content.getText().toString());
                                     }
 
                                 });
@@ -185,20 +188,16 @@ public class WDiaryActivity extends AppCompatActivity {
                             }
 
                         });
-                existFile=true;
+
+            }
+            else{
+                addDiary(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString(),"",""); // diary 데이터 푸쉬
+                RecyclerViewItem item = new RecyclerViewItem(user.getUid(),TDate.getText().toString()
+                        ,B_Theme.getText().toString(),diary_content.getText().toString());
             }
 
 
 
-
-            // 저장
-
-            addDiary(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString()); // diary 데이터 푸쉬
-            RecyclerViewItem item = new RecyclerViewItem(user.getUid(),TDate.getText().toString()
-                   ,B_Theme.getText().toString(),diary_content.getText().toString());
-
-
-            existFile=false;
 
             Intent intent = new Intent(WDiaryActivity.this,MydiaryActivity.class);
             startActivity(intent);
@@ -251,15 +250,13 @@ public class WDiaryActivity extends AppCompatActivity {
         }
     };
 
-    public void addDiary(boolean open,String theme, String date, String content){
+    public void addDiary(boolean open,String theme, String date, String content, String imagename,String uri){
         DiaryData diaryData;
-        if(existFile) {
-          diaryData = new DiaryData(open, theme, content, date, time,time+".png" );
 
-        }
-        else{
-                diaryData = new DiaryData(open, theme, content, date, time,"" );
-        }
+        diaryData = new DiaryData(content, theme,  date,time,open, imagename, uri);
+
+
+
         mDatabaseReference.child("Diary").child(user.getUid()).child(date).child(time).setValue(diaryData);
         finish();
 
@@ -302,5 +299,4 @@ public class WDiaryActivity extends AppCompatActivity {
 
     }
 }
-
 
