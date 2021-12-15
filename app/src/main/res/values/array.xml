@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="tema_array">
-        <item>테마 1</item>
-        <item>테마 2</item>
-        <item>테마 3</item>
-        <item>테마 4</item>
-        <item>테마 5</item>
+        <item>전체</item>
+        <item>여행</item>
+        <item>요리</item>
+        <item>일상</item>
+        <item>운동</item>
+        <item>공부</item>
+        <item>트러블</item>
+        <item>비밀</item>
+        <item>예술</item>
     </string-array>
 </resources>
