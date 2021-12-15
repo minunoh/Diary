@@ -2,8 +2,6 @@ package com.koreatech.diary;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,24 +20,16 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -127,6 +117,10 @@ public class WDiaryActivity extends AppCompatActivity {
                     return true;
                 }else if(mid == R.id.M_calendar){
                     Intent intent = new Intent(WDiaryActivity.this,Calendar.class);
+                    startActivity(intent);
+                    return true;
+                }else if(mid == R.id.M_home){
+                    Intent intent = new Intent(WDiaryActivity.this,MainActivity.class);
                     startActivity(intent);
                     return true;
                 }

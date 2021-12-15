@@ -80,6 +80,10 @@ public class MydiaryActivity extends AppCompatActivity{
                     Intent intent = new Intent(MydiaryActivity.this,Calendar.class);
                     startActivity(intent);
                     return true;
+                }else if(mid == R.id.M_home){ //홈
+                    Intent intent = new Intent(MydiaryActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    return true;
                 }
                 return true;
             }

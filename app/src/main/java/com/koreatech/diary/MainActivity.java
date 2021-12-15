@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -69,44 +68,19 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this,Calendar.class);
                     startActivity(intent);
                     return true;
+                }else if(mid == R.id.M_home){
+                    Intent intent = new Intent(MainActivity.this,MainActivity.class);
+                    startActivity(intent);
+                    return true;
+                }else if(mid ==R.id.M_mydiary){
+                    Intent intent =  new Intent(MainActivity.this,MydiaryActivity.class);
+                    startActivity(intent);
+                    return true;
                 }
                 return true;
             }
         });
 
-
-        // 개인정보 페이지로
-       /* Button tomembership = (Button) findViewById(R.id.tomembership);
-        tomembership.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view){
-                Intent intent = new Intent(MainActivity.this, WDiaryActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        //달력페이지로
-        Button todiary = (Button) findViewById(R.id.todiary);
-        todiary.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view){
-                Intent intent = new Intent(MainActivity.this, Calendar.class);
-                startActivity(intent);
-            }
-        });
-
-        //커뮤니티페이지로
-        Button tocommunity = (Button) findViewById(R.id.tocommunity);
-        tocommunity.setOnClickListener(new View.OnClickListener(){
-
-            @Override
-            public void onClick(View view){
-                Intent intent = new Intent(MainActivity.this, MydiaryActivity.class);
-                startActivity(intent);
-            }
-        });*/
 
     }
         public void onClick(View view){

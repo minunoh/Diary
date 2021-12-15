@@ -29,7 +29,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.applandeo.materialcalendarview.CalendarView;
 import com.applandeo.materialcalendarview.EventDay;
 import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,7 +38,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +119,10 @@ public class Calendar extends AppCompatActivity {
                 }
                 else if(mid== R.id.M_picture){
                     intent = new Intent(Calendar.this,Gallery.class);
+                    startActivity(intent);
+                    return true;
+                }else if(mid == R.id.M_home){ // 홈
+                    intent = new Intent(Calendar.this,MainActivity.class);
                     startActivity(intent);
                     return true;
                 }
