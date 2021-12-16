@@ -178,6 +178,7 @@ public class WDiaryActivity extends AppCompatActivity {
                                         String imgurl = uri.toString();
                                         GalleryData galleryData = new GalleryData(imgurl,time+".png",time);
                                         mDatabaseReference.child("Gallery").child(user.getUid()).child(time).setValue(galleryData);
+                                        addFeed(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString(),time+".png",imgurl); // diary 데이터 푸쉬
                                         addDiary(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString(),time+".png",imgurl); // diary 데이터 푸쉬
                                         RecyclerViewItem item = new RecyclerViewItem(user.getUid(),TDate.getText().toString()
                                                 ,B_Theme.getText().toString(),diary_content.getText().toString());
@@ -191,6 +192,7 @@ public class WDiaryActivity extends AppCompatActivity {
 
             }
             else{
+                addFeed(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString(),"",""); // diary 데이터 푸쉬
                 addDiary(openck,B_Theme.getText().toString(),TDate.getText().toString(),diary_content.getText().toString(),"",""); // diary 데이터 푸쉬
                 RecyclerViewItem item = new RecyclerViewItem(user.getUid(),TDate.getText().toString()
                         ,B_Theme.getText().toString(),diary_content.getText().toString());
@@ -258,6 +260,18 @@ public class WDiaryActivity extends AppCompatActivity {
 
 
         mDatabaseReference.child("Diary").child(user.getUid()).child(date).child(time).setValue(diaryData);
+        finish();
+
+    }
+
+    public void addFeed(boolean open,String theme, String date, String content, String imagename,String uri){
+        DiaryData diaryData;
+
+        diaryData = new DiaryData(content, theme,  date,time,open, imagename, uri);
+
+
+
+        mDatabaseReference.child("Feed").child(date+" "+time).child(user.getUid()).setValue(diaryData);
         finish();
 
     }
