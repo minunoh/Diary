@@ -38,6 +38,7 @@ import java.util.Date;
 
 public class WDiaryActivity extends AppCompatActivity {
 
+    //다이어리를 수정할 경우의 변수
     private Intent intent;
     private String inurl;
     private String inimagename;
@@ -48,7 +49,7 @@ public class WDiaryActivity extends AppCompatActivity {
     private String intime;
     private boolean editstate = false;
 
-    static int count = 0;
+
     //firebase auth object
     private static FirebaseAuth firebaseAuth;
 
@@ -56,7 +57,7 @@ public class WDiaryActivity extends AppCompatActivity {
     private final int GALLERY_CODE = 10;
     private FirebaseStorage storage;
     private Uri file;
-    Boolean existFile = false;
+
     //firebase data object
     private static DatabaseReference mDatabaseReference; // 데이터베이스의 주소를 저장합니다.
     private static FirebaseDatabase mFirebaseDatabase; // 데이터베이스에 접근할 수 있는 진입점 클래스입니다.
@@ -117,8 +118,12 @@ public class WDiaryActivity extends AppCompatActivity {
         inurl = intent.getStringExtra("url");
         intime = intent.getStringExtra("time");
 
+        //수정 요청이 왔다면,
         if (incontent != null) {
+            //수정 모드
             editstate = true;
+
+            //기존 데이터를 다이어리 작성창에 반영
             B_Theme.setText(intheme);
             diary_content.setText(incontent);
             TDate.setText(inday);
@@ -148,20 +153,20 @@ public class WDiaryActivity extends AppCompatActivity {
                     intent2 = new Intent(WDiaryActivity.this, WScheduleActivity.class);
                     startActivity(intent2);
                     return true;
-                } else if (mid == R.id.M_mydiary) {
+                } else if (mid == R.id.M_mydiary) {//다이어리 리스트
                     intent2 = new Intent(WDiaryActivity.this, MydiaryActivity.class);
                     startActivity(intent2);
                     return true;
-                } else if (mid == R.id.M_calendar) {
+                } else if (mid == R.id.M_calendar) {//캘린더
                     Intent intent = new Intent(WDiaryActivity.this, Calendar.class);
                     startActivity(intent);
                     return true;
-                }else if(mid == R.id.M_home){
-                    Intent intent = new Intent(WDiaryActivity.this,MainActivity.class);
+                } else if (mid == R.id.M_home) {//메인홈
+                    Intent intent = new Intent(WDiaryActivity.this, MainActivity.class);
                     startActivity(intent);
                     return true;
-                }else if(mid == R.id.tomembership){  // 개인정보
-                    Intent intent = new Intent(WDiaryActivity.this,MemberActivity.class);
+                } else if (mid == R.id.tomembership) {  // 개인정보
+                    Intent intent = new Intent(WDiaryActivity.this, MemberActivity.class);
                     startActivity(intent);
                 }
                 return true;
@@ -186,7 +191,10 @@ public class WDiaryActivity extends AppCompatActivity {
             tog++;
             tog %= 2;
         } else if (ViewId == R.id.iv_save) {
+            //내용이 없다면 저장 불가
             if (diary_content.getText().toString().equals("")) return;
+
+            //저장 시간 체크
             time = getTime2();
 
 
@@ -219,11 +227,13 @@ public class WDiaryActivity extends AppCompatActivity {
 
                     }
 
-
+                    //공개 글이었다면
                     if (inopen) {
+                        //Feed DB의 해당 데이터 삭제
                         dataRef.child("Feed").child(inday + " " + intime + " " + user.getUid()).setValue(null);
                     }
                     dataRef.child("Gallery").child(user.getUid()).child(intime).setValue(null);
+                    //Diary DB의 해당 데이터 삭제
                     dataRef.child("Diary").child(user.getUid()).child(inday).child(intime).removeValue()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -239,33 +249,37 @@ public class WDiaryActivity extends AppCompatActivity {
 
                 }
 
-                Log.d("test", String.valueOf(file));
+
                 //이미지 저장 (파이어 스토어에)
                 //사진이 존재한다면
                 if (file != null) {
 
-                    Log.d("test", "test3");
+
                     StorageReference storageRef = storage.getReference();
                     StorageReference riversRef = storageRef.child(user.getUid()).child("photo").child(time + ".png");
 
+                    //파이어스토어에 이미지를 집어넣고
                     riversRef.putFile(file)
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
 
+                                //성공시
                                 @Override
-
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                                     riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
 
+                                        //파이어 스토어에 저장되어있는 해당 uri를 받아온다.
                                         @Override
-
                                         public void onSuccess(Uri uri) {
                                             String imgurl = uri.toString();
                                             GalleryData galleryData = new GalleryData(imgurl, time + ".png", time);
+                                            //Gallery데이터에 해당 값을 넣고
                                             mDatabaseReference.child("Gallery").child(user.getUid()).child(time).setValue(galleryData);
                                             if (openck == true) {
+                                                //공개 글이라면 Feed DB에 데이터를 삽입
                                                 addFeed(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), time + ".png", imgurl); // diary 데이터 푸쉬
                                             }
+                                            //마지막으로 Diary DB에 해당 데이터를 삽입
                                             addDiary(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), time + ".png", imgurl); // diary 데이터 푸쉬
 
                                         }
@@ -276,22 +290,26 @@ public class WDiaryActivity extends AppCompatActivity {
 
                             });
 
-                } else {
-                    Log.d("test", "test2");
+                }
+                //사진이 없다면
+                else {
+                    //공개글 이라면
                     if (openck == true) {
+                        //Feed DB에 해당 데이터를 삽입
                         addFeed(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), "", ""); // diary 데이터 푸쉬
                     }
-                    Log.d("test", "test5");
+
+                    //마지막으로 Diary DB에 해당 데이터를 삽입
                     addDiary(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), "", ""); // diary 데이터 푸쉬
-                    Log.d("test", "test4");
+
 
                 }
 
-
+                //데이터 삽입후 작성한 다이어리를 보기위해 다이어리 리스트로 이동
                 Intent intent = new Intent(WDiaryActivity.this, MydiaryActivity.class);
                 startActivity(intent);
 
-            } else {
+            } else {//테마를 선택하지 않았을 경우 해당 문구 출력
                 Toast.makeText(getApplicationContext(), "테마를 선택해주세요", Toast.LENGTH_SHORT).show();
             }
 
@@ -301,7 +319,7 @@ public class WDiaryActivity extends AppCompatActivity {
         } else if (ViewId == R.id.iv_cam) {  // 시간 가져오기
             loadAlbum();
 
-        } else if (ViewId == R.id.b_theme) {
+        } else if (ViewId == R.id.b_theme) {//테마 선택창 팝업 메뉴
             Toast.makeText(getApplicationContext(), "테마 선택 창", Toast.LENGTH_SHORT).show();
             popupMenu = new PopupMenu(this, view);
             popupMenu.getMenuInflater().inflate(R.menu.t_menu, popupMenu.getMenu());
@@ -341,6 +359,8 @@ public class WDiaryActivity extends AppCompatActivity {
         }
     };
 
+
+    // Diary DB에 데이터를 집어넣는 함수
     public void addDiary(boolean open, String theme, String date, String content, String imagename, String uri) {
         DiaryData diaryData;
 
@@ -352,6 +372,7 @@ public class WDiaryActivity extends AppCompatActivity {
 
     }
 
+    //Feed DB에 데이터를 집어넣는 함수
     public void addFeed(boolean open, String theme, String date, String content, String imagename, String uri) {
         DiaryData diaryData;
 
@@ -364,6 +385,7 @@ public class WDiaryActivity extends AppCompatActivity {
     }
 
 
+    //디바이스 내의 갤러리 화면으로 이동
     private void loadAlbum() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
@@ -375,6 +397,7 @@ public class WDiaryActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        //사진을 받아오지 않았다면
         if (resultCode != Activity.RESULT_OK) {
 
             Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
@@ -383,19 +406,11 @@ public class WDiaryActivity extends AppCompatActivity {
             return;
         }
 
+        //사진을 받아오는것을 성공햇다면 해당 사진의 데이터를 삽입
         if (requestCode == GALLERY_CODE) {
             file = data.getData();
 
 
-            /*try {
-                InputStream in = getContentResolver().openInputStream(data.getData());
-                Bitmap img = BitmapFactory.decodeStream(in);
-                in.close();
-                photo.setImageBitmap(img);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-*/
         }
 
     }

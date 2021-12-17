@@ -57,11 +57,12 @@ public class WScheduleActivity extends AppCompatActivity {
     Boolean editState = false;
 
     // 날짜 가져오기
-    private String getTime(){
+    private String getTime() {
         mNow = System.currentTimeMillis();
         mDate = new Date(mNow);
         return today1.format(mDate);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,11 +85,12 @@ public class WScheduleActivity extends AppCompatActivity {
         intent = getIntent();
         day = intent.getStringExtra("day");
         content = intent.getStringExtra("content");
-        //수정 요청이 왔다면,
-        if(day!=null&&content!=null){
+
+        //수정 요청이 왔다면, 기존 데이터를 반영
+        if (day != null && content != null) {
             event.setText(content);
             eventday.setText(day);
-            editState =true;
+            editState = true;
         }
 
         //현재의 날짜를 받아온다.
@@ -107,21 +109,21 @@ public class WScheduleActivity extends AppCompatActivity {
 
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                String day ="";
-                String smonth ="";
+                String day = "";
+                String smonth = "";
 
                 //일자 두자리수 맞추기
-                if(dayOfMonth > 0 && dayOfMonth < 10){
+                if (dayOfMonth > 0 && dayOfMonth < 10) {
                     day = "0" + String.valueOf(dayOfMonth);
-                }else{
-                    day=  String.valueOf(dayOfMonth);
+                } else {
+                    day = String.valueOf(dayOfMonth);
                 }
 
                 //달 두자리수 맞추기
-                if(month+1> 0 && month+1 < 10){
-                    smonth= "0" + String.valueOf(month+1);
-                }else{
-                    smonth= String.valueOf(month+1);
+                if (month + 1 > 0 && month + 1 < 10) {
+                    smonth = "0" + String.valueOf(month + 1);
+                } else {
+                    smonth = String.valueOf(month + 1);
                 }
 
 
@@ -148,7 +150,9 @@ public class WScheduleActivity extends AppCompatActivity {
         });
 
 
-        navigationView =(NavigationView) findViewById(R.id.navigation);
+        navigationView = (NavigationView) findViewById(R.id.navigation);
+
+        //네비계이션 메뉴 선택시 이벤트 처리
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -157,24 +161,24 @@ public class WScheduleActivity extends AppCompatActivity {
                 int mid = item.getItemId();
                 Intent intent = null;
 
-                if(mid == R.id.M_diary){ // 다이어리 작성
-                    intent=  new Intent(WScheduleActivity.this,WDiaryActivity.class);
+                if (mid == R.id.M_diary) { // 다이어리 작성
+                    intent = new Intent(WScheduleActivity.this, WDiaryActivity.class);
                     startActivity(intent);
                     return true;
-                }else if(mid ==R.id.M_mydiary){ //나의 다이어리 리스트
-                    intent =  new Intent(WScheduleActivity.this,MydiaryActivity.class);
+                } else if (mid == R.id.M_mydiary) { //나의 다이어리 리스트
+                    intent = new Intent(WScheduleActivity.this, MydiaryActivity.class);
                     startActivity(intent);
                     return true;
-                }else if(mid == R.id.M_calendar){
-                    intent = new Intent(WScheduleActivity.this,Calendar.class);
+                } else if (mid == R.id.M_calendar) {//캘린더
+                    intent = new Intent(WScheduleActivity.this, Calendar.class);
                     startActivity(intent);
                     return true;
-                }else if(mid == R.id.M_home){
-                    intent = new Intent(WScheduleActivity.this,MainActivity.class);
+                } else if (mid == R.id.M_home) {//홈
+                    intent = new Intent(WScheduleActivity.this, MainActivity.class);
                     startActivity(intent);
                     return true;
-                }else if(mid == R.id.tomembership){  // 개인정보
-                    intent = new Intent(WScheduleActivity.this,MemberActivity.class);
+                } else if (mid == R.id.tomembership) {  // 개인정보
+                    intent = new Intent(WScheduleActivity.this, MemberActivity.class);
                     startActivity(intent);
                 }
                 return true;
@@ -182,19 +186,23 @@ public class WScheduleActivity extends AppCompatActivity {
         });
 
     }
+
     public void onClick(View view) {
         int ViewId = view.getId();
         if (ViewId == R.id.iv_menu) {  // 햄버거 버튼 클릭시 네비게이션 드로어
             drawerLayout.openDrawer(GravityCompat.START);
-        }else if(ViewId == R.id.ib_addtodo){ // 일정추가 버튼
+        } else if (ViewId == R.id.ib_addtodo) { // 일정추가 버튼
+
             //수정하기일 경우, 이전 데이터 삭제
-            if(editState){
+            if (editState) {
                 FirebaseDatabase mDatabase;
                 DatabaseReference dataRef;
                 FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 mDatabase = FirebaseDatabase.getInstance();
                 dataRef = mDatabase.getReference();
+
+                //Schedule DB의 해당 데이터 삭제
                 dataRef.child("Schedule").child(user.getUid()).child(day).child(content).removeValue()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -208,14 +216,15 @@ public class WScheduleActivity extends AppCompatActivity {
                     }
                 });
             }
-            addSchedule(eventday.getText().toString(),event.getText().toString());
+            //수정된 일정 추가
+            addSchedule(eventday.getText().toString(), event.getText().toString());
 
 
             Toast.makeText(getApplicationContext(), "일정 추가", Toast.LENGTH_SHORT).show();
 
-        }else if(ViewId==R.id.et_Date){  // Todolist 날짜설정
+        } else if (ViewId == R.id.et_Date) {  // Todolist 날짜설정
             Calendar cal = Calendar.getInstance();
-            DatePickerDialog datedialog =  new DatePickerDialog(this,mDateSetListener,
+            DatePickerDialog datedialog = new DatePickerDialog(this, mDateSetListener,
                     cal.get(Calendar.YEAR), cal.get(Calendar.MONTH),
                     cal.get(Calendar.DATE));
             datedialog.getDatePicker().setMinDate(System.currentTimeMillis());// 최소날짜 오늘
@@ -223,11 +232,12 @@ public class WScheduleActivity extends AppCompatActivity {
 
         }
     }
+
     DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker datePicker, int yy, int mm, int dd) {
             TextView date = findViewById(R.id.et_Date);
-            date.setText(String.format("%d-%d-%d",yy,mm+1,dd));
+            date.setText(String.format("%d-%d-%d", yy, mm + 1, dd));
         }
     };
 
@@ -252,12 +262,13 @@ public class WScheduleActivity extends AppCompatActivity {
 
         }
     };
-    public void addSchedule(String day, String content){
-        ScheduleData scheduleData = new ScheduleData(day,content);
+
+    //scheduleData를 DB에 넣는 함수
+    public void addSchedule(String day, String content) {
+        ScheduleData scheduleData = new ScheduleData(day, content);
         mDatabaseReference.child("Schedule").child(user.getUid()).child(day).child(content).setValue(scheduleData);
         finish();
     }
-
 
 
 }

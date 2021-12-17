@@ -46,6 +46,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
+            // mydiary_item.xml의 view들을 연결
             t_date =(TextView) itemView.findViewById(R.id.t_MyDiaryDate);
             t_theme= (TextView) itemView.findViewById(R.id.t_MyDiaryTheme);
             t_content= (TextView) itemView.findViewById(R.id.t_MyDiaryContent);
@@ -53,7 +54,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             itemView.setOnCreateContextMenuListener(this);
         }
 
-
+        //수정, 삭제 팝업 메뉴
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             MenuItem Edit = menu.add(this.getAdapterPosition(), 1001, 0, "수정");
@@ -62,6 +63,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             Edit.setOnMenuItemClickListener(onEditMenu);
         }
 
+        //팝업 메뉴 선택 이벤트 처리
         private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
 
 
@@ -77,7 +79,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 switch (item.getItemId()) {
                     case 1001:  // 수정 항목을 선택시
 
-                        //AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                        //기존의 다이어리 데이터를 WDiaryActivity에 전달하고 이동
                         Intent intent = new Intent(mcontext, WDiaryActivity.class);
                         intent.putExtra("day",mList.get(getAdapterPosition()).getDay());
                         intent.putExtra("content",mList.get(getAdapterPosition()).getContent());
@@ -114,10 +116,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         }
 
 
+                        //공개글 이었다면
                         if(mList.get(getAdapterPosition()).getOpen()) {
+                            //DB의 Feed에도 존재하므로 삭제
                             dataRef.child("Feed").child(mList.get(getAdapterPosition()).getDay() + " " + mList.get(getAdapterPosition()).getTime()+" "+user.getUid()).setValue(null);
                         }
+                        //DB의 Gallery에서 해당 데이터를 삭제
                         dataRef.child("Gallery").child(user.getUid()).child(mList.get(getAdapterPosition()).getTime()).setValue(null);
+                        //DB의 Diary에서 해당 데이터를 삭제
                         dataRef.child("Diary").child(user.getUid()).child(mList.get(getAdapterPosition()).getDay()).child(mList.get(getAdapterPosition()).getTime()).removeValue()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -130,6 +136,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 // fail ui
                             }
                         });
+                        //선택된 해당 아이템을 삭제하고 반영
                         mList.remove(getAdapterPosition());
                         notifyItemRemoved(getAdapterPosition());
                         notifyItemRangeChanged(getAdapterPosition(), mList.size());
@@ -167,10 +174,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DiaryData item = mList.get(position);
 
-       // holder.imgView_item.setImageResource(R.drawable.ic_launcher_background);   // 사진 없어서 기본 파일로 이미지 띄움
+
+        //날짜, 테마, 내용 표시
         holder.t_date.setText(item.getDay());
         holder.t_theme.setText(item.getTheme());
         holder.t_content.setText(item.getContent());
+
+        //다이어리의 이미지 삽입
         Glide.with(mcontext)
                 .load(Uri.parse(item.getImageurl()))
                 .override(700,500)

@@ -62,7 +62,10 @@ public class MydiaryActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         navigationView = (NavigationView) findViewById(R.id.navigation);
+
+        //네비계이션 메뉴 선택시 이벤트 처리
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -77,18 +80,28 @@ public class MydiaryActivity extends AppCompatActivity {
                     Intent intent = new Intent(MydiaryActivity.this, WScheduleActivity.class);
                     startActivity(intent);
                     return true;
-                } else if (mid == R.id.M_calendar) {
+                } else if (mid == R.id.M_calendar) {//캘린더
                     Intent intent = new Intent(MydiaryActivity.this, Calendar.class);
                     startActivity(intent);
                     return true;
-                } else if (mid == R.id.M_home) { //홈
+                } else if (mid == R.id.M_picture) {//갤러리
+                    Intent intent = new Intent(MydiaryActivity.this, Gallery.class);
+                    startActivity(intent);
+                    return true;
+                } else if (mid == R.id.M_home) { // 홈
                     Intent intent = new Intent(MydiaryActivity.this, MainActivity.class);
                     startActivity(intent);
                     return true;
-                }else if(mid == R.id.tomembership){  // 개인정보
-                    Intent intent = new Intent(MydiaryActivity.this,MemberActivity.class);
+                } else if (mid == R.id.tomembership) {  // 개인정보
+                    Intent intent = new Intent(MydiaryActivity.this, MemberActivity.class);
                     startActivity(intent);
+                    return true;
+                } else if (mid == R.id.M_setting) {//설정
+                    Intent intent = new Intent(MydiaryActivity.this, MemberActivity.class);
+                    startActivity(intent);
+                    return true;
                 }
+
                 return true;
             }
         });
@@ -96,7 +109,9 @@ public class MydiaryActivity extends AppCompatActivity {
 
         firstInit();// 리스트에 있는거
 
+        //Diary DB에서 현재 유저의 다이어리 데이터를 가져온다
         mDatabaseReference = mDatabaseReference.child("Diary").child(user.getUid());
+        //비어있지 않다면
         if (mDatabaseReference != null) {
             mDatabaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -105,6 +120,7 @@ public class MydiaryActivity extends AppCompatActivity {
                         mList.clear();
                     try {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren().iterator().next().getChildren()) {
+                            //DiaryData형태로 데이터 추출
                             addItem(dataSnapshot.getValue(DiaryData.class));
 
                         }
@@ -124,6 +140,7 @@ public class MydiaryActivity extends AppCompatActivity {
         }
 
 
+        //리사이클러뷰에 반영
         mRecyclerViewAdapter = new RecyclerViewAdapter(mList);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -136,7 +153,7 @@ public class MydiaryActivity extends AppCompatActivity {
         mList = new ArrayList<DiaryData>();
     }
 
-    // 리스트에 추가
+    // 리스트에 다이어리 데이터 추가
     public void addItem(DiaryData data) {
         DiaryData item = new DiaryData();
         item.setImagename(data.getImagename());
@@ -148,11 +165,6 @@ public class MydiaryActivity extends AppCompatActivity {
         mList.add(item);
 
     }
-    /*public void deleteItem( final int position){
-        mDatabaseReference.child("Diary").child(D_date.getText().toString());
-        if(mDatabaseReference!=null)
-            mDatabaseReference.addValueEventListener()
-    }*/
 
 
     public void onClick(View view) {

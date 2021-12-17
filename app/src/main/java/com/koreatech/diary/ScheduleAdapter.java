@@ -26,6 +26,7 @@ import java.util.ArrayList;
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder> {
 
 
+    //ScheduleData 데이터 형식의 어레이리스트
     ArrayList<ScheduleData> items = new ArrayList<ScheduleData>();
     Context context;
 
@@ -34,7 +35,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.schedule_item, parent, false);
-        context =parent.getContext();
+        context = parent.getContext();
         return new ViewHolder(itemView);
     }
 
@@ -78,7 +79,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             itemView.setOnCreateContextMenuListener(this);
         }
 
-        //롱클릭 삭제 수정 메뉴
+        //롱클릭 삭제 or 수정 팝업 메뉴
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             MenuItem Edit = menu.add(this.getAdapterPosition(), 1001, 0, "수정");
@@ -87,6 +88,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             Edit.setOnMenuItemClickListener(onEditMenu);
         }
 
+        //팝업 메뉴 클릭시 이벤트
         private final MenuItem.OnMenuItemClickListener onEditMenu = new MenuItem.OnMenuItemClickListener() {
 
 
@@ -102,18 +104,19 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                 switch (item.getItemId()) {
                     case 1001:  // 수정 항목을 선택시
 
+                        //해당 아이템의 일정 정보를 전달하며, 일정 작성 창으로 이동한다.
                         Intent intent = new Intent(context, WScheduleActivity.class);
-                        intent.putExtra("day",items.get(getAdapterPosition()).getDay());
-                        intent.putExtra("content",items.get(getAdapterPosition()).getContent());
+                        intent.putExtra("day", items.get(getAdapterPosition()).getDay());
+                        intent.putExtra("content", items.get(getAdapterPosition()).getContent());
 
                         context.startActivity(intent);
-
 
 
                         break;
 
                     case 1002://삭제항목 선택시
 
+                        //Schedule DB의 해당 데이터를 삭제
                         dataRef.child("Schedule").child(user.getUid()).child(items.get(getAdapterPosition()).getDay()).child(items.get(getAdapterPosition()).getContent()).removeValue()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -126,6 +129,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                                 // fail ui
                             }
                         });
+                        //해당 아이템 삭제 및 반영
                         items.remove(getAdapterPosition());
                         notifyItemRemoved(getAdapterPosition());
                         notifyItemRangeChanged(getAdapterPosition(), items.size());
