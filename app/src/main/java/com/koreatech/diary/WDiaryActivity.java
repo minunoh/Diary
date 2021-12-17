@@ -270,7 +270,7 @@ public class WDiaryActivity extends AppCompatActivity {
         diaryData = new DiaryData(content, theme, date, time, open, imagename, uri);
 
 
-        mDatabaseReference.child("Feed").child(date + " " + time).child(user.getUid()).setValue(diaryData);
+        mDatabaseReference.child("Feed").child(date + " " + time + " " + user.getUid()).setValue(diaryData);
         finish();
 
     }

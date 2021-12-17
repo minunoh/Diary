@@ -56,13 +56,13 @@ public class FeedActivity extends AppCompatActivity {
 
         spinner = (Spinner)findViewById(R.id.spinner);
 
-        mDatabaseReference =mDatabaseReference.child("Diary").child(user.getUid());
+        mDatabaseReference =mDatabaseReference.child("Feed");
         mDatabaseReference.limitToLast(10).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(mList!=null)
                     mList.clear();
-                for(DataSnapshot dataSnapshot : snapshot.getChildren().iterator().next().getChildren()){
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     key_storage = dataSnapshot.getKey();
                     populateData(dataSnapshot.getValue(FeedData.class));
                 }
@@ -138,7 +138,7 @@ public class FeedActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(mList!=null)
                     mList.clear();
-                for(DataSnapshot dataSnapshot : snapshot.getChildren().iterator().next().getChildren()){
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     key_storage = dataSnapshot.getKey();
                     populateData(dataSnapshot.getValue(FeedData.class));
                 }
@@ -175,7 +175,7 @@ public class FeedActivity extends AppCompatActivity {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
 
                 if (!isLoading) {
-                    if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == mList.size() - 1 && mList_get.size() == 10) {
+                    if (layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == mList.size() - 1) {
                         //리스트 마지막
                         loadMore();
                         isLoading = true;
@@ -197,17 +197,17 @@ public class FeedActivity extends AppCompatActivity {
                 int scrollPosition = mList.size();
                 adapter.notifyItemRemoved(scrollPosition);
 
-                mDatabaseReference.orderByKey().endAt(oldestPostId).limitToLast(20).addListenerForSingleValueEvent(new ValueEventListener() {
+                mDatabaseReference.orderByKey().endAt(oldestPostId).limitToLast(10).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         mList_get.clear(); //임시저장 위치
                         oldPost_get.clear();
-                        for(DataSnapshot dataSnapshot : snapshot.getChildren().iterator().next().getChildren()){
+                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                             mList_get.add(0,dataSnapshot.getValue(FeedData.class));
                             oldPost_get.add(dataSnapshot.getKey());
                         }
 
-                        if(mList.size() > 1) {//1개라도 있으면 불러옴
+                        if(mList_get.size() > 1) {//1개라도 있으면 불러옴
                             //마지막 중복되는 부분 삭제
                             mList_get.remove(0);
                             //contents 뒤에 추가
@@ -215,6 +215,7 @@ public class FeedActivity extends AppCompatActivity {
                             oldestPostId = oldPost_get.get(0);
                             //메시지 갱신 위치
                             adapter.notifyDataSetChanged();
+                            isLoading = false;
                         } else {
                             Snackbar.make(getWindow().getDecorView().getRootView(), "마지막 게시물입니다.", Snackbar.LENGTH_SHORT)
                                     .setAction("닫기", new View.OnClickListener() {@Override public void onClick(View view) {}}).show();
@@ -225,7 +226,6 @@ public class FeedActivity extends AppCompatActivity {
                     public void onCancelled(@NonNull DatabaseError error) {
                     }
                 });
-                isLoading = false;
             }
         }, 2000);
     }
