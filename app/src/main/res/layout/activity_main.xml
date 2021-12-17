@@ -26,9 +26,9 @@
             android:id="@+id/tomembership"
             android:onClick="onClick"
             android:layout_width="320dp"
-            android:layout_height="150dp"
+            android:layout_height="200dp"
             android:layout_gravity="center"
-            android:layout_marginTop="150dp"
+            android:layout_marginTop="100dp"
             android:text="개인정보">
 
         </Button>

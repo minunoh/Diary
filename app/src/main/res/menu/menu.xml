@@ -41,11 +41,11 @@
         <item
             android:title=""/>
 
-    <item
+    <!--<item
         android:id="@+id/M_log"
         android:title = "로그아웃"
         android:icon = "@drawable/ic_logout"
-       />
+       />-->
     <item
         android:id="@+id/M_setting"
         android:title = "설정"

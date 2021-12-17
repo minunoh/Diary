@@ -9,17 +9,15 @@
     android:paddingTop="16dp">
 
     <TextView
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="LOGIN"
         android:textSize="24sp"
-        android:layout_marginBottom="16dp"
-        ></TextView>
-    //DD
-    //dd
-    /fsdfsdfsfsdfas
+        android:layout_marginBottom="16dp">
+
+    </TextView>
+
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,7 +71,7 @@
         >
     </TextView>
 
-    <Button
+    <!--<Button
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:text="Login with Google"
@@ -82,7 +80,14 @@
         android:layout_marginBottom="16dp"
         >
 
-    </Button>
+    </Button>-->
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/signInButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerHorizontal="true" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
