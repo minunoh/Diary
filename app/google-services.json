@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "567666444109",
+    "project_id": "diary-59467",
+    "storage_bucket": "diary-59467.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567666444109:android:701ab868c1e50ff51ad904",
+        "android_client_info": {
+          "package_name": "com.koreatech.diary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "567666444109-almig2hi65ekihf0gkfs813g793apcd6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koreatech.diary",
+            "certificate_hash": "51db83c6fefae8150ad933f7ae17ec9d014fa13b"
+          }
+        },
+        {
+          "client_id": "567666444109-t0cc8kmcpuvebj16bh1qnkrqigfopg9k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQk8H-aA7BOHNHLF-L_tzun4ZkHFpyt5g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "567666444109-t0cc8kmcpuvebj16bh1qnkrqigfopg9k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
