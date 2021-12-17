@@ -1,13 +1,20 @@
 package com.koreatech.diary;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,8 +52,9 @@ public class Gallery extends AppCompatActivity {
     private static FirebaseUser user;
     private static FirebaseStorage storage;
     private static ArrayList<GalleryData>  arrayList = new ArrayList<>();;
-
-
+    private DrawerLayout drawerLayout;// 드로어되는 창
+    NavigationView navigationView;
+    private Toolbar toolbar;// 액션바(툴바)
     private static GridViewAdapter galleryadapter = null;
     private static GridView gridView= null;
 
@@ -57,6 +66,12 @@ public class Gallery extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+
+        navigationView = findViewById(R.id.navigation);
+        drawerLayout = findViewById(R.id.drawer);
+        toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
         storage=FirebaseStorage.getInstance();
         galleryadapter =new GridViewAdapter();
         gridView = findViewById(R.id.gallery_gridview);
@@ -66,7 +81,7 @@ public class Gallery extends AppCompatActivity {
         storage=FirebaseStorage.getInstance();
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        ImageView imageView2 =findViewById(R.id.test2);
+
         galleryadapter.items=showGallery();
 
         if(galleryadapter.items.size()!=0) {
@@ -77,7 +92,38 @@ public class Gallery extends AppCompatActivity {
 
 
 
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                item.setChecked(true);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                int mid = item.getItemId();
+                Intent intent = null;
 
+                if(mid == R.id.M_diary){ // 다이어리 작성
+                    intent=  new Intent(Gallery.this,WDiaryActivity.class);
+                    startActivity(intent);
+                    return true;
+                }else if(mid ==R.id.M_mydiary){ //나의 다이어리 리스트
+                    intent =  new Intent(Gallery.this,MydiaryActivity.class);
+                    startActivity(intent);
+                    return true;
+                }else if(mid == R.id.M_calendar){
+                  intent = new Intent(Gallery.this,Calendar.class);
+                    startActivity(intent);}
+
+                else if(mid== R.id.M_picture){
+                    intent = new Intent(Gallery.this,Gallery.class);
+                    startActivity(intent);
+                    return true;
+                }else if(mid == R.id.M_home){ // 홈
+                    intent = new Intent(Gallery.this,MainActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                return true;
+            }
+        });
 
 
     }
@@ -86,7 +132,14 @@ public class Gallery extends AppCompatActivity {
 
     /* 그리드뷰 어댑터 */
     public static class GridViewAdapter extends BaseAdapter {
+        AlertDialog dialog;
+
+
         ArrayList<GalleryData> items = new ArrayList<GalleryData>();
+
+
+
+
 
         @Override
         public int getCount() {
@@ -135,6 +188,26 @@ public class Gallery extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     //Toast.makeText(context, bearItem.getNum()+" 번 - "+bearItem.getName()+" 입니당! ", Toast.LENGTH_SHORT).show();
+                    ImageView image = new ImageView(context);
+                    image.setImageResource(R.drawable.ic_sprout);
+                    Glide.with(context)
+                            .load(Uri.parse(Item.getImaguri()))
+                            .override(700,700)
+                            .into(image);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("\n"+"\n");
+                    builder.setView(image);
+
+                    builder.setNegativeButton("종료", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if(dialog != null) {
+                                dialog.dismiss();
+                            }
+                        }
+                    });
+                    dialog = builder.create();
+                    dialog.show();
                 }
             });
 
@@ -179,4 +252,36 @@ public class Gallery extends AppCompatActivity {
             return null;
         }
     }
+
+    public void onClick(View view) {
+        int ViewId = view.getId();
+        if (ViewId == R.id.iv_menu) {
+            drawerLayout.openDrawer(GravityCompat.START);
+        }
+
+    }
+
+
+    DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
+        @Override
+        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+        }
+
+        @Override
+        public void onDrawerOpened(@NonNull View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerClosed(@NonNull View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+
+        }
+    };
+
 }

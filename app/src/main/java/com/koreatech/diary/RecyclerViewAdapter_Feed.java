@@ -1,5 +1,6 @@
 package com.koreatech.diary;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,7 @@ import java.util.List;
 public class RecyclerViewAdapter_Feed extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
-
+    Context context;
     private ArrayList<FeedData> mList = new ArrayList<FeedData>();
 
     public RecyclerViewAdapter_Feed(ArrayList<FeedData> mList) {
@@ -25,6 +26,7 @@ public class RecyclerViewAdapter_Feed extends RecyclerView.Adapter<RecyclerView.
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context= parent.getContext();
         if (viewType == VIEW_TYPE_ITEM) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.feed_item_row, parent, false);
             return new ItemViewHolder(view);

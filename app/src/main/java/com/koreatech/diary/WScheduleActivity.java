@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,6 +18,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,12 +44,17 @@ public class WScheduleActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView TDate;
     private NavigationView navigationView;
-    private EditText eventday;
+    private TextView eventday;
     private EditText event;
-    private EditText eventlist;
+    //수정 데이터
+    Intent intent;
+    String day;
+    String content;
+
     Date mDate;
     long mNow;
     SimpleDateFormat today1 = new SimpleDateFormat("yyyy-MM-dd");
+    Boolean editState = false;
 
     // 날짜 가져오기
     private String getTime(){
@@ -65,13 +73,80 @@ public class WScheduleActivity extends AppCompatActivity {
         TDate = findViewById(R.id.Date);
         TDate.setText(getTime());  //날짜 입력
         event = findViewById(R.id.et_event);
-        eventlist = findViewById(R.id.schdulelist);
         eventday = findViewById(R.id.et_Date);
         // 네비게이션 드로어 + 툴바 설정
         ivMenu = findViewById(R.id.iv_menu);
         drawerLayout = findViewById(R.id.drawer);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        intent = getIntent();
+        day = intent.getStringExtra("day");
+        content = intent.getStringExtra("content");
+        //수정 요청이 왔다면,
+        if(day!=null&&content!=null){
+            event.setText(content);
+            eventday.setText(day);
+            editState =true;
+        }
+
+        //현재의 날짜를 받아온다.
+        Calendar c = Calendar.getInstance();
+        int mYear = c.get(Calendar.YEAR);
+        int mMonth = c.get(Calendar.MONTH);
+        int mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        Button button = findViewById(R.id.datepick);
+
+        //날짜 선택 버튼 클릭시
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+            //선택한 날짜를 저장
+            @Override
+
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                String day ="";
+                String smonth ="";
+
+                //일자 두자리수 맞추기
+                if(dayOfMonth > 0 && dayOfMonth < 10){
+                    day = "0" + String.valueOf(dayOfMonth);
+                }else{
+                    day=  String.valueOf(dayOfMonth);
+                }
+
+                //달 두자리수 맞추기
+                if(month+1> 0 && month+1 < 10){
+                    smonth= "0" + String.valueOf(month+1);
+                }else{
+                    smonth= String.valueOf(month+1);
+                }
+
+
+                eventday.setText(year + "-" + smonth + "-" + day);
+
+            }
+
+        }, mYear, mMonth, mDay);
+
+
+        //오늘 이전 날짜는 선택불가
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+
+            public void onClick(View v) {
+
+                datePickerDialog.show();
+
+            }
+
+        });
+
 
         navigationView =(NavigationView) findViewById(R.id.navigation);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -112,11 +187,32 @@ public class WScheduleActivity extends AppCompatActivity {
         if (ViewId == R.id.iv_menu) {  // 햄버거 버튼 클릭시 네비게이션 드로어
             drawerLayout.openDrawer(GravityCompat.START);
         }else if(ViewId == R.id.ib_addtodo){ // 일정추가 버튼
-            addSchedule(eventday.getText().toString(),event.getText().toString(),eventlist.getText().toString());
-            event.setText("");
+            //수정하기일 경우, 이전 데이터 삭제
+            if(editState){
+                FirebaseDatabase mDatabase;
+                DatabaseReference dataRef;
+                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                mDatabase = FirebaseDatabase.getInstance();
+                dataRef = mDatabase.getReference();
+                dataRef.child("Schedule").child(user.getUid()).child(day).child(content).removeValue()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() { // DB에서 Fail날경우는 거의 없음..
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // fail ui
+                    }
+                });
+            }
+            addSchedule(eventday.getText().toString(),event.getText().toString());
 
 
             Toast.makeText(getApplicationContext(), "일정 추가", Toast.LENGTH_SHORT).show();
+
         }else if(ViewId==R.id.et_Date){  // Todolist 날짜설정
             Calendar cal = Calendar.getInstance();
             DatePickerDialog datedialog =  new DatePickerDialog(this,mDateSetListener,
@@ -156,9 +252,12 @@ public class WScheduleActivity extends AppCompatActivity {
 
         }
     };
-    public void addSchedule(String day, String title, String content){
-        ScheduleData scheduleData = new ScheduleData(day,title,content);
-        mDatabaseReference.child("Schedule").child(user.getUid()).child(day).child(title).setValue(scheduleData);
+    public void addSchedule(String day, String content){
+        ScheduleData scheduleData = new ScheduleData(day,content);
+        mDatabaseReference.child("Schedule").child(user.getUid()).child(day).child(content).setValue(scheduleData);
         finish();
     }
+
+
+
 }

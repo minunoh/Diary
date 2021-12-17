@@ -13,9 +13,8 @@ public class ScheduleData  {
 
     }
 
-    public ScheduleData(String day, String title, String content){
+    public ScheduleData(String day, String content){
         this.day = day;
-        this.title = title;
         this.content = content;
     }
 

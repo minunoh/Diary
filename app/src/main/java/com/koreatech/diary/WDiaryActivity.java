@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +37,17 @@ import java.util.Date;
 
 
 public class WDiaryActivity extends AppCompatActivity {
+
+    private Intent intent;
+    private String inurl;
+    private String inimagename;
+    private boolean inopen;
+    private String incontent;
+    private String intheme;
+    private String inday;
+    private String intime;
+    private boolean editstate = false;
+
     static int count = 0;
     //firebase auth object
     private static FirebaseAuth firebaseAuth;
@@ -93,6 +106,28 @@ public class WDiaryActivity extends AppCompatActivity {
         diary_content = (EditText) findViewById(R.id.writepage);// write diary content
         B_Theme = (Button) findViewById(R.id.b_theme);
         setSupportActionBar(toolbar);
+
+        //수정하기를 눌렀을 경우 값 받아오기
+        intent = getIntent();
+        incontent = intent.getStringExtra("content");
+        inimagename = intent.getStringExtra("imagename");
+        inopen = intent.getBooleanExtra("open", true);
+        inday = intent.getStringExtra("day");
+        intheme = intent.getStringExtra("theme");
+        inurl = intent.getStringExtra("url");
+        intime = intent.getStringExtra("time");
+
+        if (incontent != null) {
+            editstate = true;
+            B_Theme.setText(intheme);
+            diary_content.setText(incontent);
+            TDate.setText(inday);
+            openck = inopen;
+            if (!inurl.equals("")) {
+                file = Uri.parse(inurl);
+            }
+
+        }
 
 
         // initializing database
@@ -155,55 +190,111 @@ public class WDiaryActivity extends AppCompatActivity {
             time = getTime2();
 
 
-            //이미지 저장 (파이어 스토어에)
-            //사진이 존재한다면
-            if (file != null) {
-
-
-                StorageReference storageRef = storage.getReference();
-                StorageReference riversRef = storageRef.child(user.getUid()).child("photo").child(time + ".png");
-
-                riversRef.putFile(file)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-
+            //테마를 선택했을 경우
+            if (!B_Theme.getText().toString().equals("테마 설정")) {
+                //수정하는 경우, 이전 데이터는 삭제
+                if (editstate) {
+                    FirebaseDatabase mDatabase;
+                    DatabaseReference dataRef;
+                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    mDatabase = FirebaseDatabase.getInstance();
+                    dataRef = mDatabase.getReference();
+                    //다이어리를 작성할 때 이미지를 넣었다면, 이미지에 대한 정보도 삭제
+                    if (inimagename.length() > 0) {
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference riversRef = storageRef.child(user.getUid()).child("photo").child(inimagename);
+                        riversRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
-
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                                riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-
-                                    @Override
-
-                                    public void onSuccess(Uri uri) {
-                                        String imgurl = uri.toString();
-                                        GalleryData galleryData = new GalleryData(imgurl, time + ".png", time);
-                                        mDatabaseReference.child("Gallery").child(user.getUid()).child(time).setValue(galleryData);
-                                        if (openck == true) {
-                                            addFeed(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), time + ".png", imgurl); // diary 데이터 푸쉬
-                                        }
-                                        addDiary(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), time + ".png", imgurl); // diary 데이터 푸쉬
-                                        RecyclerViewItem item = new RecyclerViewItem(user.getUid(), TDate.getText().toString()
-                                                , B_Theme.getText().toString(), diary_content.getText().toString());
-                                    }
-
-                                });
+                            public void onSuccess(Void unused) {
 
                             }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
 
+                            }
                         });
 
-            } else {
-                if (openck == true) {
-                    addFeed(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), "", ""); // diary 데이터 푸쉬
+                    }
+
+
+                    if (inopen) {
+                        dataRef.child("Feed").child(inday + " " + intime + " " + user.getUid()).setValue(null);
+                    }
+                    dataRef.child("Gallery").child(user.getUid()).child(intime).setValue(null);
+                    dataRef.child("Diary").child(user.getUid()).child(inday).child(intime).removeValue()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() { // DB에서 Fail날경우는 거의 없음..
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // fail ui
+                        }
+                    });
+
                 }
-                addDiary(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), "", ""); // diary 데이터 푸쉬
-                RecyclerViewItem item = new RecyclerViewItem(user.getUid(), TDate.getText().toString()
-                        , B_Theme.getText().toString(), diary_content.getText().toString());
+
+                Log.d("test", String.valueOf(file));
+                //이미지 저장 (파이어 스토어에)
+                //사진이 존재한다면
+                if (file != null) {
+
+                    Log.d("test", "test3");
+                    StorageReference storageRef = storage.getReference();
+                    StorageReference riversRef = storageRef.child(user.getUid()).child("photo").child(time + ".png");
+
+                    riversRef.putFile(file)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                                @Override
+
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                    riversRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+
+                                        @Override
+
+                                        public void onSuccess(Uri uri) {
+                                            String imgurl = uri.toString();
+                                            GalleryData galleryData = new GalleryData(imgurl, time + ".png", time);
+                                            mDatabaseReference.child("Gallery").child(user.getUid()).child(time).setValue(galleryData);
+                                            if (openck == true) {
+                                                addFeed(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), time + ".png", imgurl); // diary 데이터 푸쉬
+                                            }
+                                            addDiary(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), time + ".png", imgurl); // diary 데이터 푸쉬
+
+                                        }
+
+                                    });
+
+                                }
+
+                            });
+
+                } else {
+                    Log.d("test", "test2");
+                    if (openck == true) {
+                        addFeed(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), "", ""); // diary 데이터 푸쉬
+                    }
+                    Log.d("test", "test5");
+                    addDiary(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), "", ""); // diary 데이터 푸쉬
+                    Log.d("test", "test4");
+
+                }
+
+
+                Intent intent = new Intent(WDiaryActivity.this, MydiaryActivity.class);
+                startActivity(intent);
+
+            } else {
+                Toast.makeText(getApplicationContext(), "테마를 선택해주세요", Toast.LENGTH_SHORT).show();
             }
 
-
-            Intent intent = new Intent(WDiaryActivity.this, MydiaryActivity.class);
-            startActivity(intent);
         } else if (ViewId == R.id.iv_clock) {  // 시간 가져오기
             diary_content.setText(getTime2());
 

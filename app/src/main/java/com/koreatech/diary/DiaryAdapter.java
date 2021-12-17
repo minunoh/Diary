@@ -1,6 +1,7 @@
 package com.koreatech.diary;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -28,13 +29,14 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
 
 
     ArrayList<DiaryData> items = new ArrayList<DiaryData>();
-    private Context mContext;
+    private Context context;
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.diary_item, parent, false);
+        context =parent.getContext();
         return new ViewHolder(itemView);
     }
 
@@ -84,6 +86,7 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
             MenuItem Edit = menu.add(this.getAdapterPosition(), 1001, 0, "수정");
             MenuItem Delete = menu.add(this.getAdapterPosition(), 1002, 1, "삭제");
             Delete.setOnMenuItemClickListener(onEditMenu);
+            Edit.setOnMenuItemClickListener(onEditMenu);
 
         }
 
@@ -92,27 +95,35 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-
+                FirebaseDatabase mDatabase;
+                DatabaseReference dataRef;
+                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                mDatabase = FirebaseDatabase.getInstance();
+                dataRef = mDatabase.getReference();
 
                 switch (item.getItemId()) {
                     case 1001:  // 수정 항목을 선택시
 
-                        //AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                        Intent intent = new Intent(context, WDiaryActivity.class);
+                        intent.putExtra("day",items.get(getAdapterPosition()).getDay());
+                        intent.putExtra("content",items.get(getAdapterPosition()).getContent());
+                        intent.putExtra("url",items.get(getAdapterPosition()).getImageurl());
+                        intent.putExtra("theme",items.get(getAdapterPosition()).getTheme());
+                        intent.putExtra("open",items.get(getAdapterPosition()).getOpen());
+                        intent.putExtra("imagename",items.get(getAdapterPosition()).getImagename());
+                        intent.putExtra("time", items.get(getAdapterPosition()).getTime());
+                        context.startActivity(intent);
+
+
+
+
 
 
                         break;
 
                     case 1002://삭제항목 선택시
-
-                        FirebaseDatabase mDatabase;
-                        DatabaseReference dataRef;
-                        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                        FirebaseUser user = firebaseAuth.getCurrentUser();
-                        mDatabase = FirebaseDatabase.getInstance();
-                        dataRef = mDatabase.getReference();
-                        Log.e("test", String.valueOf(items.get(getAdapterPosition()).getImageurl().length()));
-
-
 
 
                         //다이어리를 작성할 때 이미지를 넣었다면, 이미지에 대한 정보도 삭제
@@ -132,6 +143,11 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
                                 }
                             });
 
+                        }
+
+
+                        if(items.get(getAdapterPosition()).getOpen()) {
+                            dataRef.child("Feed").child(items.get(getAdapterPosition()).getDay() + " " + items.get(getAdapterPosition()).getTime()+" "+user.getUid()).setValue(null);
                         }
                         dataRef.child("Gallery").child(user.getUid()).child(items.get(getAdapterPosition()).getTime()).setValue(null);
                         dataRef.child("Diary").child(user.getUid()).child(items.get(getAdapterPosition()).getDay()).child(items.get(getAdapterPosition()).getTime()).removeValue()

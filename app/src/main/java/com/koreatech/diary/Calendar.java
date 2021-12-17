@@ -113,7 +113,7 @@ public class Calendar extends AppCompatActivity {
                     startActivity(intent);
                     return true;
                 }else if(mid == R.id.M_calendar){
-                    intent = new Intent(Calendar.this, java.util.Calendar.class);
+                    intent = new Intent(Calendar.this, Calendar.class);
                     startActivity(intent);
                     return true;
                 }
@@ -179,8 +179,12 @@ public class Calendar extends AppCompatActivity {
 
         // 첫시작 할 때 일정이 있으면 캘린더에 dot(새싹)으로 표시해주기
         mFirebaseDatabase.getReference().child("Schedule").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //일정데이터가 변경될 때 onDataChange함수 발생
+                if(events!=null){
+                    events.clear();
+                }
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String key = snapshot.getKey();
                     int[] date = splitDate(key);
