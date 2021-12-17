@@ -98,6 +98,9 @@ public class WScheduleActivity extends AppCompatActivity {
                     intent = new Intent(WScheduleActivity.this,MainActivity.class);
                     startActivity(intent);
                     return true;
+                }else if(mid == R.id.tomembership){  // 개인정보
+                    intent = new Intent(WScheduleActivity.this,MemberActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }

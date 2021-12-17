@@ -125,6 +125,9 @@ public class Calendar extends AppCompatActivity {
                     intent = new Intent(Calendar.this,MainActivity.class);
                     startActivity(intent);
                     return true;
+                }else if(mid == R.id.tomembership){  // 개인정보
+                    intent = new Intent(Calendar.this,MemberActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }

@@ -1,9 +1,11 @@
 package com.koreatech.diary;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -56,8 +58,21 @@ public class MemberActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+
+        int ViewId = view.getId();
+        if (ViewId == R.id.btn_logout) { // 로그아웃 버튼 누르면
+            Toast.makeText(getApplicationContext(), "정상적으로 로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
+            signOut();
+            finish();
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+        } else if (ViewId == R.id.btn_revoke) { // 탈퇴 버튼 누르면
+            Toast.makeText(getApplicationContext(), "정상적으로 탈퇴되었습니다", Toast.LENGTH_SHORT).show();
+            revokeAccess();
+            finishAffinity();
+        }
+        /*switch (view.getId()){
             case R.id.btn_logout:
+                Toast.makeText(this,"정상적으로 로그아웃 되었습니다.",Toast.LENGTH_LONG).show();
                 signOut();
                 finishAffinity();
                 break;
@@ -65,6 +80,6 @@ public class MemberActivity extends AppCompatActivity implements View.OnClickLis
                 revokeAccess();
                 finishAffinity();
                 break;
-        }
+        }*/
     }
 }
