@@ -242,11 +242,13 @@ public class Gallery extends AppCompatActivity {
 
     //Gallery DB에서 url을 뽑아오는 함수
     public static ArrayList<GalleryData> showGallery() {
-        mDatabaseReference = mFirebaseDatabase.getReference().child("Gallery").child(user.getUid());
+        mDatabaseReference = mFirebaseDatabase.getReference()
+                .child("Gallery").child(user.getUid());
 
         // DB가 비어있지 않다면
         if (mDatabaseReference != null) {
-            mFirebaseDatabase.getReference().child("Gallery").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+            mFirebaseDatabase.getReference().child("Gallery").child(user.getUid())
+                    .addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
@@ -261,11 +263,7 @@ public class Gallery extends AppCompatActivity {
                         arrayList.add(snapshot.getValue(GalleryData.class));
                     }
 
-//
-
-
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     // 디비를 가져오던 중 에러 발생 시

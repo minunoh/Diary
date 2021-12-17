@@ -134,7 +134,8 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
                         if (items.get(getAdapterPosition()).getImagename().length()>0 ) {
                             FirebaseStorage storage = FirebaseStorage.getInstance();
                             StorageReference storageRef = storage.getReference();
-                            StorageReference riversRef = storageRef.child(user.getUid()).child("photo").child(items.get(getAdapterPosition()).getImagename());
+                            StorageReference riversRef = storageRef.child(user.getUid()).child("photo")
+                                    .child(items.get(getAdapterPosition()).getImagename());
                             riversRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {

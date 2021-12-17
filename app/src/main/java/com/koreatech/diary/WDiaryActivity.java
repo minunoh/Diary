@@ -280,7 +280,8 @@ public class WDiaryActivity extends AppCompatActivity {
                                                 addFeed(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), time + ".png", imgurl); // diary 데이터 푸쉬
                                             }
                                             //마지막으로 Diary DB에 해당 데이터를 삽입
-                                            addDiary(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), time + ".png", imgurl); // diary 데이터 푸쉬
+                                            addDiary(openck, B_Theme.getText().toString(), TDate.getText().toString(),
+                                                    diary_content.getText().toString(), time + ".png", imgurl); // diary 데이터 푸쉬
 
                                         }
 
@@ -300,7 +301,8 @@ public class WDiaryActivity extends AppCompatActivity {
                     }
 
                     //마지막으로 Diary DB에 해당 데이터를 삽입
-                    addDiary(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), "", ""); // diary 데이터 푸쉬
+                    addDiary(openck, B_Theme.getText().toString(), TDate.getText().toString(),
+                            diary_content.getText().toString(), "", ""); // diary 데이터 푸쉬
 
 
                 }

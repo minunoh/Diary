@@ -380,7 +380,6 @@ public class Calendar extends AppCompatActivity {
                             //ScheduleData형식으로 데이터를 추출
                             scheduleData.add(snapshot.getValue(ScheduleData.class));
                         }
-
                         //일정 리사이클러뷰에 반영
                         scheduleAdapter.items = scheduleData;
                         scheduleAdapter.notifyDataSetChanged();

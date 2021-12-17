@@ -103,7 +103,6 @@ public class WScheduleActivity extends AppCompatActivity {
 
         //날짜 선택 버튼 클릭시
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-
             //선택한 날짜를 저장
             @Override
 
@@ -216,8 +215,9 @@ public class WScheduleActivity extends AppCompatActivity {
                     }
                 });
             }
-            //수정된 일정 추가
-            addSchedule(eventday.getText().toString(), event.getText().toString());
+            //일정 추가
+            addSchedule(eventday.getText().toString(),
+                    event.getText().toString());
 
 
             Toast.makeText(getApplicationContext(), "일정 추가", Toast.LENGTH_SHORT).show();
@@ -266,7 +266,8 @@ public class WScheduleActivity extends AppCompatActivity {
     //scheduleData를 DB에 넣는 함수
     public void addSchedule(String day, String content) {
         ScheduleData scheduleData = new ScheduleData(day, content);
-        mDatabaseReference.child("Schedule").child(user.getUid()).child(day).child(content).setValue(scheduleData);
+        mDatabaseReference.child("Schedule").child(user.getUid()).child(day)
+                .child(content).setValue(scheduleData);
         finish();
     }
 

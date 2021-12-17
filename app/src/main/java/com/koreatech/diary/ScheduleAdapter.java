@@ -117,7 +117,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                     case 1002://삭제항목 선택시
 
                         //Schedule DB의 해당 데이터를 삭제
-                        dataRef.child("Schedule").child(user.getUid()).child(items.get(getAdapterPosition()).getDay()).child(items.get(getAdapterPosition()).getContent()).removeValue()
+                        dataRef.child("Schedule").child(user.getUid()).child(items.get(getAdapterPosition()).getDay())
+                                .child(items.get(getAdapterPosition()).getContent()).removeValue()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
