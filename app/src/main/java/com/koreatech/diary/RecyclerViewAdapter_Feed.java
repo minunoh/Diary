@@ -163,6 +163,7 @@ public class RecyclerViewAdapter_Feed extends RecyclerView.Adapter<RecyclerView.
             int a = Integer.parseInt(mList.getLike());
             a -=1;
             mDatabaseReference.child("Feed").child(date + " " + time + " " + userid).child("like").setValue(String.valueOf(a));
+            mList.setLike(String.valueOf(a));
             mDatabaseReference.child("Feed").child(date + " " + time + " " + userid).child("like_clicker").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -181,6 +182,7 @@ public class RecyclerViewAdapter_Feed extends RecyclerView.Adapter<RecyclerView.
             int a = Integer.parseInt(mList.getLike());
             a +=1;
             mDatabaseReference.child("Feed").child(date + " " + time + " " + userid).child("like").setValue(String.valueOf(a));
+            mList.setLike(String.valueOf(a));
             mDatabaseReference.child("Feed").child(date + " " + time + " " + userid).child("like_clicker").push().setValue(user.getUid());
             i=1;
         }
