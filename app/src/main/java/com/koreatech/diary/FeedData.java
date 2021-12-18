@@ -7,27 +7,24 @@ public class FeedData {
     private String day; // 날짜
     private String time;
     private boolean open ;
+    private String imageurl;
     private String imagename;
-
-    public String getFilename() {
-        return imagename;
-    }
-
-    public void setFilename(String imagename) {
-        this.imagename =  imagename;;
-    }
-
+    private String like;
+    private String comment;
 
     public FeedData() { }
-    public FeedData(boolean open, String theme,String content,String day, String time, String imagename){
+
+    public FeedData(boolean open, String theme,String content,String day, String time, String imagename,String imageurl, String like, String comment){
         this.open = open;
         this.theme = theme;
         this.content= content;
         this.day = day;
         this.time =time;
-        this.imagename=imagename;
+        this.imagename = imagename;
+        this.imageurl = imageurl;
+        this.like = like;
+        this.comment = comment;
     }
-
 
     public boolean getOpen(){return open;}
     public void setOpen(Boolean open){this.open = open;}
@@ -54,5 +51,29 @@ public class FeedData {
     }
     public void setContent(String content) { this.content = content; }
 
+    public String getImagename() { return imagename; }
+    public void setImagename(String imagename) {
+        this.imagename = imagename;
+    }
 
+    public String getImageurl() {
+        return imageurl;
+    }
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
+    }
+
+    public String getLike() {
+        return like;
+    }
+    public void setLike(String like) {
+        this.like = like;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }

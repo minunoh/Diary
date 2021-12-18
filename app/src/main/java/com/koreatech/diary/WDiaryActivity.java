@@ -71,6 +71,8 @@ public class WDiaryActivity extends AppCompatActivity {
     long mNow;
     Date mDate;
     private String time = "";
+    private String like = "0";
+    private String comment = "0";
     SimpleDateFormat today1 = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat today2 = new SimpleDateFormat("hh:mm:ss");
 
@@ -265,12 +267,12 @@ public class WDiaryActivity extends AppCompatActivity {
     }
 
     public void addFeed(boolean open, String theme, String date, String content, String imagename, String uri) {
-        DiaryData diaryData;
+        FeedData feedData;
 
-        diaryData = new DiaryData(content, theme, date, time, open, imagename, uri);
+        feedData = new FeedData(open, theme, content, date, time, imagename, uri, like, comment);
 
 
-        mDatabaseReference.child("Feed").child(date + " " + time + " " + user.getUid()).setValue(diaryData);
+        mDatabaseReference.child("Feed").child(date + " " + time + " " + user.getUid()).setValue(feedData);
         finish();
 
     }

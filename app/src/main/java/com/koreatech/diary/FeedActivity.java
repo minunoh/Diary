@@ -57,7 +57,7 @@ public class FeedActivity extends AppCompatActivity {
         spinner = (Spinner)findViewById(R.id.spinner);
 
         mDatabaseReference =mDatabaseReference.child("Feed");
-        mDatabaseReference.limitToLast(10).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReference.limitToLast(5).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(mList!=null)
@@ -82,7 +82,7 @@ public class FeedActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(parent.getItemAtPosition(position).toString().equals("전체")){
                     spinner_theme = "전체";
-                    listRevise();
+                    listRevise_viewall();
                 } else if(parent.getItemAtPosition(position).toString().equals("여행")){
                     spinner_theme = "여행";
                     listRevise();
@@ -122,22 +122,46 @@ public class FeedActivity extends AppCompatActivity {
         if(data.getOpen()){
             if(data.getTheme().equals(spinner_theme)){
                 mList.add(0, data);
-                mList_get.add(0, data);
-                oldPost_get.add(key_storage);
             }else if(spinner_theme.equals("전체")){
                 mList.add(0, data);
                 mList_get.add(0, data);
+                oldPost_get.add(key_storage);
+            }else{
                 oldPost_get.add(key_storage);
             }
         }
     }
 
     private void listRevise(){
-        mDatabaseReference.limitToLast(10).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(mList!=null)
+                if(mList!=null) {
                     mList.clear();
+                }
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    populateData(dataSnapshot.getValue(FeedData.class));
+                }
+                recyclerView = findViewById(R.id.recyclerView);
+                initAdapter();
+                initScrollListener();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    private void listRevise_viewall(){
+        mDatabaseReference.limitToLast(5).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(mList!=null) {
+                    mList.clear();
+                    mList_get.clear();
+                    oldPost_get.clear();
+                }
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     key_storage = dataSnapshot.getKey();
                     populateData(dataSnapshot.getValue(FeedData.class));
@@ -197,14 +221,19 @@ public class FeedActivity extends AppCompatActivity {
                 int scrollPosition = mList.size();
                 adapter.notifyItemRemoved(scrollPosition);
 
-                mDatabaseReference.orderByKey().endAt(oldestPostId).limitToLast(10).addListenerForSingleValueEvent(new ValueEventListener() {
+                mDatabaseReference.orderByKey().endAt(oldestPostId).limitToLast(5).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         mList_get.clear(); //임시저장 위치
                         oldPost_get.clear();
                         for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-                            mList_get.add(0,dataSnapshot.getValue(FeedData.class));
-                            oldPost_get.add(dataSnapshot.getKey());
+                            if(dataSnapshot.getValue(FeedData.class).getTheme().equals(spinner_theme)){
+                                mList_get.add(0,dataSnapshot.getValue(FeedData.class));
+                                oldPost_get.add(dataSnapshot.getKey());
+                            } else if(spinner_theme.equals("전체")){
+                                mList_get.add(0,dataSnapshot.getValue(FeedData.class));
+                                oldPost_get.add(dataSnapshot.getKey());
+                            }
                         }
 
                         if(mList_get.size() > 1) {//1개라도 있으면 불러옴
@@ -217,6 +246,7 @@ public class FeedActivity extends AppCompatActivity {
                             adapter.notifyDataSetChanged();
                             isLoading = false;
                         } else {
+                            isLoading = false;
                             Snackbar.make(getWindow().getDecorView().getRootView(), "마지막 게시물입니다.", Snackbar.LENGTH_SHORT)
                                     .setAction("닫기", new View.OnClickListener() {@Override public void onClick(View view) {}}).show();
                         }
@@ -236,5 +266,18 @@ public class FeedActivity extends AppCompatActivity {
 
         if(v.getId() == R.id.comment_button)
             startActivity(intent);
+
+
     }
+/*
+    public void addFeed(String theme, String date, String content, String imagename, String url) {
+        FeedData feedData;
+
+        feedData = new FeedData(content, theme, date, time, imagename, url);
+
+
+        mDatabaseReference.child("Feed").child(date + " " + time + " " + user.getUid()).setValue(feedData);
+        finish();
+
+    }*/
 }

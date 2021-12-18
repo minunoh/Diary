@@ -11,15 +11,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/user_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16sp"
-            android:textSize="16sp"
-            tools:text="사용자 아이디" />
+        android:orientation="vertical"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <TextView
             android:id="@+id/feed_theme"
@@ -39,6 +33,7 @@
             android:id="@+id/feed_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:srcCompat="@drawable/bono" />
 
         <LinearLayout
@@ -51,6 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:paddingTop="15dp"
                 android:text="게시글 작성시각" />
 
             <LinearLayout
@@ -72,7 +68,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="좋아요 수" />
+                    android:paddingTop="10dp"
+                    android:text=" 0" />
 
                 <ImageView
                     android:id="@+id/comment_button"
@@ -87,7 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="댓글 수" />
+                    android:text="0" />
             </LinearLayout>
 
         </LinearLayout>
