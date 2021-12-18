@@ -10,13 +10,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -32,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     //구글 api 클라이언트
     private GoogleSignInClient mGoogleSignInClient;
     //구글로그인 result 상수
-    private static final int RC_SIGN_IN = 9001;
+    private static final int RC_SIGN_IN = 10;
     //구글 로그인 버튼
     private SignInButton signInButton;
 
@@ -50,19 +55,19 @@ public class LoginActivity extends AppCompatActivity {
         //파이어베이스 인증 객체 선언
         mAuth = FirebaseAuth.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-        //구글
-        signInButton = findViewById(R.id.signInButton);
+        /*//구글
+        signInButton = findViewById(R.id.signInButton);*/
 
 
 
-        /*// 로그인 후 메인화면으로
+        // 로그인 후 메인화면으로
         if (mAuth.getCurrentUser() != null) {
             Intent intent = new Intent(getApplication(), MainActivity.class);
             startActivity(intent);
             finish();
         }
 
-        // 구글 로그인 앱에 통합
+       /* // 구글 로그인 앱에 통합
         // GoogleSignInOptions 개체 구상시 requestIdToken 호출
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -130,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
         };
     }
 
-  /* //구글 로그인 관련
+  //구글 로그인 관련
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -142,6 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
+                Toast.makeText(getApplicationContext(), "onActivityResult", Toast.LENGTH_SHORT).show();
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 // ...
@@ -157,10 +163,10 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser firebaseUser = mAuth.getCurrentUser();
-
+                            Toast.makeText(getApplicationContext(), "구글로그인 성공", Toast.LENGTH_SHORT).show();
                             if(firebaseUser != null)
                             {
-                                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                                Intent intent = new Intent(getApplication(), MainActivity.class);
                                 startActivity(intent);
                             }
 
@@ -171,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                         // ...
                     }
                 });
-    }*/
+    }
 
 
     //일반 로그인
@@ -208,18 +214,19 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        /*FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        updateUI(currentUser);*/
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        updateUI(currentUser);
     }
+
 
     public void updateUI(FirebaseUser account){
 
         if(account != null){
-            Toast.makeText(this,"You Signed In successfully",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"정상적으로 로그인 되었습니다.",Toast.LENGTH_LONG).show();
             startActivity(new Intent(this,MainActivity.class));
 
         }else {
-            Toast.makeText(this,"You Didnt signed in",Toast.LENGTH_LONG).show();
+
         }
     }
 

@@ -94,13 +94,6 @@ public class DiaryData {
     }
 
     public DiaryData() { }
-    //Diary-
-    // ID-
-    //    날짜,
-    //        테마,공개여부,작성글(DiaryData)
-
-
-
 
 
 }

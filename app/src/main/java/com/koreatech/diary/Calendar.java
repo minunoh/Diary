@@ -60,8 +60,6 @@ public class Calendar extends AppCompatActivity {
     private ImageView ivMenu;//메뉴버튼
     private PopupMenu popupMenu;
     private int writetype = 0;
-    //주노형 바보
-    //문선민 바보
     //firebase auth object
     private static FirebaseAuth firebaseAuth;
 
@@ -69,7 +67,6 @@ public class Calendar extends AppCompatActivity {
     private static DatabaseReference mDatabaseReference; // 데이터베이스의 주소를 저장합니다.
     private static FirebaseDatabase mFirebaseDatabase; // 데이터베이스에 접근할 수 있는 진입점 클래스입니다.
     private static FirebaseUser user;
-
 
 
     // 선택한 날짜
@@ -96,6 +93,8 @@ public class Calendar extends AppCompatActivity {
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frameLayout, fragmentSchedule, "aa").commitAllowingStateLoss();
 
+
+        //네비게이션뷰 선택시 이벤트
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -104,25 +103,33 @@ public class Calendar extends AppCompatActivity {
                 int mid = item.getItemId();
                 Intent intent = null;
 
-                if(mid == R.id.M_diary){ // 다이어리 작성
-                    intent=  new Intent(Calendar.this,WDiaryActivity.class);
+                if (mid == R.id.M_diary) { // 다이어리 작성
+                    intent = new Intent(Calendar.this, WDiaryActivity.class);
                     startActivity(intent);
                     return true;
-                }else if(mid ==R.id.M_mydiary){ //나의 다이어리 리스트
-                    intent =  new Intent(Calendar.this,MydiaryActivity.class);
+
+                } else if (mid == R.id.M_tdlist) { // 일정 작성
+                    intent = new Intent(Calendar.this, WScheduleActivity.class);
                     startActivity(intent);
                     return true;
-                }else if(mid == R.id.M_calendar){
-                    intent = new Intent(Calendar.this, java.util.Calendar.class);
+                } else if (mid == R.id.M_mydiary) { //나의 다이어리 리스트
+                    intent = new Intent(Calendar.this, MydiaryActivity.class);
                     startActivity(intent);
                     return true;
-                }
-                else if(mid== R.id.M_picture){
-                    intent = new Intent(Calendar.this,Gallery.class);
+                } else if (mid == R.id.M_picture) {//갤러리
+                    intent = new Intent(Calendar.this, Gallery.class);
                     startActivity(intent);
                     return true;
-                }else if(mid == R.id.M_home){ // 홈
-                    intent = new Intent(Calendar.this,MainActivity.class);
+                } else if (mid == R.id.M_home) { // 홈
+                    intent = new Intent(Calendar.this, MainActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else if (mid == R.id.tomembership) {  // 개인정보
+                    intent = new Intent(Calendar.this, MemberActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else if (mid == R.id.M_setting) {//설정
+                    intent = new Intent(Calendar.this, MemberActivity.class);
                     startActivity(intent);
                     return true;
                 }
@@ -137,12 +144,10 @@ public class Calendar extends AppCompatActivity {
             public void onClick(View v) {
                 if (writetype == 0) {
                     //일정 작성페이지로 이동
-
                     Intent intent = new Intent(Calendar.this, WScheduleActivity.class);
                     startActivity(intent);
                 } else if (writetype == 1) {
                     //다이어리 작성페이지로 이동
-
                     Intent intent = new Intent(Calendar.this, WDiaryActivity.class);
                     startActivity(intent);
                 }
@@ -171,18 +176,30 @@ public class Calendar extends AppCompatActivity {
         checkYear = todayYear;
         checkMonth = todayMonth;
         checkDay = todayDay;
+
+        //처음은 오늘 날짜로 선택하여, 일정, 다이어리 리스트를 업데이트 한다.
         fragmentSchedule.update(checkYear, checkMonth, checkDay);
         fragmentDiary.update(checkYear, checkMonth, checkDay);
 
-        // 첫시작 할 때 일정이 있으면 캘린더에 dot(새싹)으로 표시해주기
+        //일정에 변화가 있다면, 반영하여 달력에 '새싹' 모양 표시
         mFirebaseDatabase.getReference().child("Schedule").child(user.getUid()).addValueEventListener(new ValueEventListener() {
+
+            //일정데이터가 변경될 때 onDataChange함수 발생
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) { //일정데이터가 변경될 때 onDataChange함수 발생
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //먼저 이벤트 목록이 차있다면, 초기화
+                if (events != null) {
+                    events.clear();
+                }
+                //일정 데이터를 뽑아옴
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String key = snapshot.getKey();
+                    //연, 월, 일을 분리하여
                     int[] date = splitDate(key);
                     java.util.Calendar event_calendar = java.util.Calendar.getInstance();
+                    //event_calendar에 저장
                     event_calendar.set(date[0], date[1] - 1, date[2]);
+                    //해당 날짜에 event가 있다면 '새싹' 표시
                     EventDay event = new EventDay(event_calendar, R.drawable.ic_sprout);
                     events.add(event);
                 }
@@ -244,6 +261,8 @@ public class Calendar extends AppCompatActivity {
     }
 
 
+    //다이어리 프래그먼트
+
     public static class FragmentSchedule extends Fragment {
 
         private static TextView list_empty;
@@ -265,6 +284,8 @@ public class Calendar extends AppCompatActivity {
             return rootView;
         }
 
+
+        //초기화 함수
         private void initUI(ViewGroup rootView) {
 
             schedulerecyclerView = rootView.findViewById(R.id.scheduleRecyclerView);
@@ -277,6 +298,8 @@ public class Calendar extends AppCompatActivity {
             schedulerecyclerView.setEmptyView(list_empty);
         }
 
+
+        //일정 리스트 업데이트 함수
         static void update(int year, int month, int day) {
             showDB(year, month, day, "Schedule");
 
@@ -287,11 +310,9 @@ public class Calendar extends AppCompatActivity {
     }
 
 
+    //일정 프래그먼트
     public static class FragmentDiary extends Fragment {
 
-        RecyclerView recyclerView;
-        DiaryAdapter adapter;
-        Context context;
 
         private static TextView list_empty;
 
@@ -305,6 +326,7 @@ public class Calendar extends AppCompatActivity {
             return rootView;
         }
 
+        //초기화 함수
         private void initUI(ViewGroup rootView) {
 
             diaryrecyclerView = rootView.findViewById(R.id.diaryRecyclerView);
@@ -319,6 +341,7 @@ public class Calendar extends AppCompatActivity {
 
         }
 
+        //Diary 리스트 업데이트 함수
         static void update(int year, int month, int day) {
             showDB(year, month, day, "Diary");
 
@@ -327,6 +350,7 @@ public class Calendar extends AppCompatActivity {
     }
 
 
+    //선택된 날짜의 일정이나 다이어리 리스트를 보여주는 함수
     public static void showDB(int year, int month, int day, String type) {
         String stringday = "";
         if (day < 10) {
@@ -335,25 +359,34 @@ public class Calendar extends AppCompatActivity {
             stringday = String.valueOf(day);
         }
 
+        //해당 날짜의 데이터 진입
         mDatabaseReference = mFirebaseDatabase.getReference().child(type).child(user.getUid()).child(year + "-" + (month + 1) + "-" + stringday);
+        //만약 '일정' 데이터라면
         if (type.equals("Schedule")) {
+
+            //DB가 비어 있지 않으면,
             if (mDatabaseReference != null) {
                 mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        // firebase 데이터베이스의 데이터를 받아오는 곳
+                        // firebase 데이터베이스의 데이터를 받아온다.
+                        //scheduleData 초기화
                         if (scheduleData != null)
                             scheduleData.clear();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) { // 반복문으로 데이터 List를 추출해냄
 
+                        // 반복문으로 데이터 List를 추출해냄
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                            //ScheduleData형식으로 데이터를 추출
                             scheduleData.add(snapshot.getValue(ScheduleData.class));
                         }
-
+                        //일정 리사이클러뷰에 반영
                         scheduleAdapter.items = scheduleData;
                         scheduleAdapter.notifyDataSetChanged();
 
                     }
 
+                    // 실패 할 시
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         // 디비를 가져오던 중 에러 발생 시
@@ -363,24 +396,32 @@ public class Calendar extends AppCompatActivity {
 
 
             }
+
+            //만약 '다이어리' 데이터라면
         } else if (type.equals("Diary")) {
             if (mDatabaseReference != null) {
                 mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         // firebase 데이터베이스의 데이터를 받아오는 곳
+                        //diaryData 초기화
                         if (diaryData != null)
                             diaryData.clear();
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) { // 반복문으로 데이터 List를 추출해냄
 
+                        // 반복문으로 데이터 List를 추출해냄
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+
+                            //DiaryData 데이터 형식으로 데이터를 추출
                             diaryData.add(snapshot.getValue(DiaryData.class));
                         }
 
+                        //다이어리 리사이클러뷰에 반영
                         diaryAdapter.items = diaryData;
                         diaryAdapter.notifyDataSetChanged();
 
                     }
 
+                    //실패 할 시
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         // 디비를 가져오던 중 에러 발생 시
@@ -391,11 +432,8 @@ public class Calendar extends AppCompatActivity {
         }
     }
 
-  /*  private static String[] splitData(String data) {
-        String[] splitText = data.split("/");
-        return splitText;
-    }*/
 
+    //"-"를 기준으로 데이터를 분리해주는 함수 (ex 2021-22-22 =>  '2021', '22', '22')
     private int[] splitDate(String date) {
         String[] splitText = date.split("-");
         int[] result_date = {Integer.parseInt(splitText[0]), Integer.parseInt(splitText[1]), Integer.parseInt(splitText[2])};
@@ -425,9 +463,7 @@ public class Calendar extends AppCompatActivity {
         }
     };
 
-
-
-
+    //클릭시 드로우레이아웃을 연다
     public void onClick(View view) {
         int ViewId = view.getId();
         if (ViewId == R.id.iv_menu) {

@@ -5,17 +5,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ScheduleData  {
-    private String content;
+    private String content;//일정
     private String title;
-    private String day;
+    private String day;//날짜
 
     public ScheduleData() {
 
     }
 
-    public ScheduleData(String day, String title, String content){
+    public ScheduleData(String day, String content){
         this.day = day;
-        this.title = title;
         this.content = content;
     }
 

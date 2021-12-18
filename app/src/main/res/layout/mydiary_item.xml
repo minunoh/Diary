@@ -26,18 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageButton
-                    android:id="@+id/b_delete"
-                    android:layout_width="19dp"
-                    android:layout_height="16dp"
-                    android:background="@drawable/bround"
-                    android:src="@drawable/ic_delete_neon"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="3dp"
-                    android:onClick="onClick"
 
-                    ></ImageButton>
 
                 <TextView
                     android:id="@+id/t_MyDiaryDate"
@@ -68,6 +57,13 @@
                 android:paddingBottom="10dp"
                 android:text="다이어리 내용"
                 android:background="@color/cardview_light_background"/>
+            <ImageView
+                android:id="@+id/t_MyDiaryImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/cardview_light_background"
+                />
+
 
 
         </LinearLayout>

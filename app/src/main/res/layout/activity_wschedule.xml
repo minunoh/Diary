@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:openDrawer="start"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
 
         <LinearLayout
 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:background="#226E6969"
-            android:backgroundTint="#322B2B">
+            android:backgroundTint="#322B2B"
+            android:orientation="vertical">
 
             <include layout="@layout/toolbar" />
 
@@ -34,47 +35,60 @@
                 android:id="@+id/t_weather"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:text="날짜"
-                android:textAlignment="center"
-                android:paddingTop="3dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
-                android:textStyle="bold"
+                android:background="@drawable/edgeall"
+                android:paddingTop="3dp"
+                android:text="날짜"
+                android:textAlignment="center"
                 android:textSize="17sp"
-                android:background="@drawable/edgeall"/>
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/et_Date"
+                    android:layout_width="200dp"
+                    android:textAlignment="center"
+                    android:layout_height="match_parent"
+                    android:inputType="textPersonName" />
+
+                <Button
+                    android:id="@+id/datepick"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="날짜 선택"/>
 
 
-            <EditText
-                android:id="@+id/et_Date"
-                android:layout_width="247dp"
-                android:layout_height="40dp"
-                android:layout_marginHorizontal="20dp"
-                android:ems="10"
-                android:hint=" 날짜를 입력해주세요."
-                android:onClick="onClick"
-                android:inputType="textPersonName" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="50dp"
                 android:layout_height="30dp"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/edgeall"
+                android:paddingTop="3dp"
                 android:text="할 일"
                 android:textAlignment="center"
-                android:paddingTop="3dp"
-                android:layout_marginStart="5dp"
-                android:textStyle="bold"
                 android:textSize="17sp"
-                android:background="@drawable/edgeall"/>
+                android:textStyle="bold" />
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <EditText
                     android:id="@+id/et_event"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
-                    android:hint=" 일정을 추가해주세요."
                     android:ems="10"
+                    android:hint=" 일정을 추가해주세요."
                     android:inputType="textPersonName" />
 
                 <ImageButton
@@ -85,22 +99,16 @@
                     android:layout_marginVertical="12dp"
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/bround"
-                    android:scaleType="fitCenter"
                     android:elevation="@dimen/cardview_compat_inset_shadow"
                     android:onClick="onClick"
+                    android:scaleType="fitCenter"
                     app:srcCompat="@drawable/ic_plus" />
             </FrameLayout>
 
-            <EditText
-                android:id="@+id/schdulelist"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="20dp"
-                android:background="@android:color/white"
-                android:hint="추가된 일정들이 표현될 자리" />
+
 
         </LinearLayout>
+
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigation"
             android:layout_width="wrap_content"

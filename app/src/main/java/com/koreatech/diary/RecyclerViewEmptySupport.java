@@ -6,6 +6,8 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+
+//리사이클러뷰가 비어있을때, 대신 출력해주는 클래스
 public class RecyclerViewEmptySupport extends RecyclerView {
     private View emptyView;
 

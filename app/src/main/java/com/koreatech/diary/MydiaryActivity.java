@@ -29,7 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-public class MydiaryActivity extends AppCompatActivity{
+public class MydiaryActivity extends AppCompatActivity {
     //firebase auth object
     private static FirebaseAuth firebaseAuth;
 
@@ -62,30 +62,46 @@ public class MydiaryActivity extends AppCompatActivity{
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        navigationView =(NavigationView) findViewById(R.id.navigation);
+
+        navigationView = (NavigationView) findViewById(R.id.navigation);
+
+        //네비계이션 메뉴 선택시 이벤트 처리
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 item.setChecked(true);
                 drawerLayout.closeDrawer(GravityCompat.START);
                 int mid = item.getItemId();
-                if(mid == R.id.M_diary){ // 다이어리 작성
-                    Intent intent=  new Intent(MydiaryActivity.this,WDiaryActivity.class);
+                if (mid == R.id.M_diary) { // 다이어리 작성
+                    Intent intent = new Intent(MydiaryActivity.this, WDiaryActivity.class);
                     startActivity(intent);
                     return true;
-                }else if(mid ==R.id.M_tdlist){ // 일정 작성
-                    Intent intent=  new Intent(MydiaryActivity.this,WScheduleActivity.class);
+                } else if (mid == R.id.M_tdlist) { // 일정 작성
+                    Intent intent = new Intent(MydiaryActivity.this, WScheduleActivity.class);
                     startActivity(intent);
                     return true;
-                }else if(mid == R.id.M_calendar){
-                    Intent intent = new Intent(MydiaryActivity.this,Calendar.class);
+                } else if (mid == R.id.M_calendar) {//캘린더
+                    Intent intent = new Intent(MydiaryActivity.this, Calendar.class);
                     startActivity(intent);
                     return true;
-                }else if(mid == R.id.M_home){ //홈
-                    Intent intent = new Intent(MydiaryActivity.this,MainActivity.class);
+                } else if (mid == R.id.M_picture) {//갤러리
+                    Intent intent = new Intent(MydiaryActivity.this, Gallery.class);
+                    startActivity(intent);
+                    return true;
+                } else if (mid == R.id.M_home) { // 홈
+                    Intent intent = new Intent(MydiaryActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else if (mid == R.id.tomembership) {  // 개인정보
+                    Intent intent = new Intent(MydiaryActivity.this, MemberActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else if (mid == R.id.M_setting) {//설정
+                    Intent intent = new Intent(MydiaryActivity.this, MemberActivity.class);
                     startActivity(intent);
                     return true;
                 }
+
                 return true;
             }
         });
@@ -93,8 +109,10 @@ public class MydiaryActivity extends AppCompatActivity{
 
         firstInit();// 리스트에 있는거
 
-        mDatabaseReference =mDatabaseReference.child("Diary").child(user.getUid());
-        if(mDatabaseReference!=null){
+        //Diary DB에서 현재 유저의 다이어리 데이터를 가져온다
+        mDatabaseReference = mDatabaseReference.child("Diary").child(user.getUid());
+        //비어있지 않다면
+        if (mDatabaseReference != null) {
             mDatabaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -102,19 +120,19 @@ public class MydiaryActivity extends AppCompatActivity{
                         mList.clear();
                     try {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren().iterator().next().getChildren()) {
+                            //DiaryData형태로 데이터 추출
                             addItem(dataSnapshot.getValue(DiaryData.class));
 
                         }
 
                         mRecyclerViewAdapter.notifyDataSetChanged();
-                    }
-                    catch (NoSuchElementException e) {
+                    } catch (NoSuchElementException e) {
 
                     }
-
 
 
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                 }
@@ -122,6 +140,7 @@ public class MydiaryActivity extends AppCompatActivity{
         }
 
 
+        //리사이클러뷰에 반영
         mRecyclerViewAdapter = new RecyclerViewAdapter(mList);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -129,39 +148,32 @@ public class MydiaryActivity extends AppCompatActivity{
     }
 
 
-
-
-    public void firstInit(){  // mList를 생성
+    public void firstInit() {  // mList를 생성
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mList = new ArrayList<DiaryData>();
     }
-    // 리스트에 추가
-    public void addItem(DiaryData data){
+
+    // 리스트에 다이어리 데이터 추가
+    public void addItem(DiaryData data) {
         DiaryData item = new DiaryData();
-        if(data.getOpen()==false) {
-            item.setDay(data.getDay());
-            item.setTheme(data.getTheme());
-            item.setContent(data.getContent());
-            mList.add(item);
-        }
+        item.setImagename(data.getImagename());
+        item.setImageurl(data.getImageurl());
+        item.setTime(data.getTime());
+        item.setDay(data.getDay());
+        item.setTheme(data.getTheme());
+        item.setContent(data.getContent());
+        mList.add(item);
+
     }
-    /*public void deleteItem( final int position){
-        mDatabaseReference.child("Diary").child(D_date.getText().toString());
-        if(mDatabaseReference!=null)
-            mDatabaseReference.addValueEventListener()
-    }*/
 
 
     public void onClick(View view) {
         int ViewId = view.getId();
         if (ViewId == R.id.iv_menu) {  // 햄버거 버튼 클릭시 네비게이션 드로어
             drawerLayout.openDrawer(GravityCompat.START);
-        }else if(ViewId == R.id.b_delete){
-            D_date = (TextView)findViewById(R.id.t_MyDiaryDate);
-
-            Toast.makeText(this,"다이어리삭제",Toast.LENGTH_SHORT).show();
         }
     }
+
     DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
         @Override
         public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
