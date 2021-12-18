@@ -128,10 +128,6 @@ public class Calendar extends AppCompatActivity {
                     intent = new Intent(Calendar.this, MemberActivity.class);
                     startActivity(intent);
                     return true;
-                } else if (mid == R.id.M_setting) {//설정
-                    intent = new Intent(Calendar.this, MemberActivity.class);
-                    startActivity(intent);
-                    return true;
                 }
                 return true;
             }

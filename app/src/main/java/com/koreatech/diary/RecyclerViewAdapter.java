@@ -179,7 +179,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.t_date.setText(item.getDay());
         holder.t_theme.setText(item.getTheme());
         holder.t_content.setText(item.getContent());
-
         //다이어리의 이미지 삽입
         Glide.with(mcontext)
                 .load(Uri.parse(item.getImageurl()))

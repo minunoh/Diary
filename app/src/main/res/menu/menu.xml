@@ -14,7 +14,7 @@
         />
     <item
         android:id="@+id/M_tdlist"
-        android:title = "일정/가계부 작성"
+        android:title = "일정"
         android:icon = "@drawable/ic_write"
         />
     <item

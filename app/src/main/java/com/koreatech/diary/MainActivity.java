@@ -87,6 +87,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(intent);
                     return true;
                 }
+                else if(mid ==R.id.M_picture){//갤러리
+                    Intent intent =  new Intent(MainActivity.this,Gallery.class);
+                    startActivity(intent);
+                    return true;
+                }
                 return true;
             }
         });

@@ -118,11 +118,8 @@ public class Gallery extends AppCompatActivity {
                 } else if (mid == R.id.M_calendar) {//캘린더
                     intent = new Intent(Gallery.this, Calendar.class);
                     startActivity(intent);
-                } else if (mid == R.id.M_picture) {//갤러리
-                    intent = new Intent(Gallery.this, Gallery.class);
-                    startActivity(intent);
-                    return true;
-                } else if (mid == R.id.M_home) { // 홈
+                }
+                 else if (mid == R.id.M_home) { // 홈
                     intent = new Intent(Gallery.this, MainActivity.class);
                     startActivity(intent);
                     return true;

@@ -107,45 +107,32 @@ public class WScheduleActivity extends AppCompatActivity {
             @Override
 
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-
                 String day = "";
                 String smonth = "";
-
                 //일자 두자리수 맞추기
                 if (dayOfMonth > 0 && dayOfMonth < 10) {
                     day = "0" + String.valueOf(dayOfMonth);
                 } else {
                     day = String.valueOf(dayOfMonth);
                 }
-
                 //달 두자리수 맞추기
                 if (month + 1 > 0 && month + 1 < 10) {
                     smonth = "0" + String.valueOf(month + 1);
                 } else {
                     smonth = String.valueOf(month + 1);
                 }
-
-
                 eventday.setText(year + "-" + smonth + "-" + day);
-
             }
-
         }, mYear, mMonth, mDay);
-
 
         //오늘 이전 날짜는 선택불가
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
 
         button.setOnClickListener(new View.OnClickListener() {
-
             @Override
-
             public void onClick(View v) {
-
                 datePickerDialog.show();
-
             }
-
         });
 
 
@@ -178,6 +165,10 @@ public class WScheduleActivity extends AppCompatActivity {
                     return true;
                 } else if (mid == R.id.tomembership) {  // 개인정보
                     intent = new Intent(WScheduleActivity.this, MemberActivity.class);
+                    startActivity(intent);
+                }
+                else if (mid == R.id.M_picture) {  // 갤러리
+                    intent = new Intent(WScheduleActivity.this, Gallery.class);
                     startActivity(intent);
                 }
                 return true;
