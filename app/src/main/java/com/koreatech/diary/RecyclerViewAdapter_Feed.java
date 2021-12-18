@@ -133,10 +133,11 @@ public class RecyclerViewAdapter_Feed extends RecyclerView.Adapter<RecyclerView.
                 public void onClick(View view)
                 {
                     //if(){
-                    LikeData like = new LikeData();
-                    like.setUserid(user.getUid());
-                    addFeed(mList, like);
-                    heartOnOff(mList);
+                    addFeed(mList);
+                    if(i == 0)
+                        like_btn.setImageResource(R.drawable.heart_1);
+                    else if(i == 1)
+                        like_btn.setImageResource(R.drawable.heart_2);
                     //}
                 }
             });
@@ -153,7 +154,7 @@ public class RecyclerViewAdapter_Feed extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    public void addFeed(FeedData mList, LikeData like_clicker) {
+    public void addFeed(FeedData mList) {
         String userid = mList.getUserid();
         String date = mList.getDay();
         String time = mList.getTime();
@@ -175,11 +176,13 @@ public class RecyclerViewAdapter_Feed extends RecyclerView.Adapter<RecyclerView.
                 public void onCancelled(@NonNull DatabaseError error) {
                 }
             });
+            i=0;
         }else if( i == 0){
             int a = Integer.parseInt(mList.getLike());
             a +=1;
             mDatabaseReference.child("Feed").child(date + " " + time + " " + userid).child("like").setValue(String.valueOf(a));
             mDatabaseReference.child("Feed").child(date + " " + time + " " + userid).child("like_clicker").push().setValue(user.getUid());
+            i=1;
         }
     }
 
@@ -188,12 +191,14 @@ public class RecyclerViewAdapter_Feed extends RecyclerView.Adapter<RecyclerView.
         String date = mList.getDay();
         String time = mList.getTime();
 
+
         mDatabaseReference.child("Feed").child(date + " " + time + " " + userid).child("like_clicker").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if(dataSnapshot.getValue().equals(user.getUid())){
                         i = 1;
+                        break;
                     } else
                         i = 0;
                 }
