@@ -380,7 +380,7 @@ public class WDiaryActivity extends AppCompatActivity {
     public void addFeed(boolean open, String theme, String date, String content, String imagename, String uri) {
         FeedData feedData;
 
-        feedData = new FeedData(open, theme, content, date, time, imagename, uri, like, comment);
+        feedData = new FeedData(open, user.getUid(), theme, content, date, time, imagename, uri, like, comment);
 
 
         mDatabaseReference.child("Feed").child(date + " " + time + " " + user.getUid()).setValue(feedData);

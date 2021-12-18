@@ -3,7 +3,7 @@ package com.koreatech.diary;
 public class FeedData {
     private String content; // 내용
     private String theme;// 테마
-    private String name; // ID
+    private String userid; // ID
     private String day; // 날짜
     private String time;
     private boolean open ;
@@ -14,8 +14,9 @@ public class FeedData {
 
     public FeedData() { }
 
-    public FeedData(boolean open, String theme,String content,String day, String time, String imagename,String imageurl, String like, String comment){
+    public FeedData(boolean open, String userid,String theme,String content,String day, String time, String imagename,String imageurl, String like, String comment){
         this.open = open;
+        this.userid = userid;
         this.theme = theme;
         this.content= content;
         this.day = day;
@@ -28,6 +29,13 @@ public class FeedData {
 
     public boolean getOpen(){return open;}
     public void setOpen(Boolean open){this.open = open;}
+
+    public String getUserid() {
+        return userid;
+    }
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
 
     public String getTheme(){return theme;}
     public void setTheme(String theme){this.theme = theme;}
