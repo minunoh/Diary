@@ -128,8 +128,6 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
 
                     //삭제항목 선택시
                     case 1002:
-
-
                         //다이어리를 작성할 때 이미지를 넣었다면, 이미지에 대한 정보도 삭제
                         if (items.get(getAdapterPosition()).getImagename().length()>0 ) {
                             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -139,17 +137,13 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
                             riversRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-
                                 }
                             });
-
                         }
-
                         //다이어리가 공개로 설정되어 있을 경우
                         if(items.get(getAdapterPosition()).getOpen()) {
                             //해당하는 'Feed' DB도 삭제
@@ -162,7 +156,6 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-
                                     }
                                 }).addOnFailureListener(new OnFailureListener() { // DB에서 Fail날경우는 거의 없음..
                             @Override
@@ -170,7 +163,6 @@ public class DiaryAdapter extends RecyclerView.Adapter<DiaryAdapter.ViewHolder> 
                                 // fail ui
                             }
                         });
-
                         //다이어리 리사이클러뷰의 해당 아이템을 삭제하고, 반영
                         items.remove(getAdapterPosition());
                         notifyItemRemoved(getAdapterPosition());

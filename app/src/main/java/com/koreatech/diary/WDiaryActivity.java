@@ -171,6 +171,11 @@ public class WDiaryActivity extends AppCompatActivity {
                     Intent intent = new Intent(WDiaryActivity.this, MemberActivity.class);
                     startActivity(intent);
                 }
+                else if(mid ==R.id.M_picture){//갤러리
+                    Intent intent =  new Intent(WDiaryActivity.this,Gallery.class);
+                    startActivity(intent);
+                    return true;
+                }
                 return true;
             }
         });
@@ -279,7 +284,8 @@ public class WDiaryActivity extends AppCompatActivity {
                                             mDatabaseReference.child("Gallery").child(user.getUid()).child(time).setValue(galleryData);
                                             if (openck == true) {
                                                 //공개 글이라면 Feed DB에 데이터를 삽입
-                                                addFeed(openck, B_Theme.getText().toString(), TDate.getText().toString(), diary_content.getText().toString(), time + ".png", imgurl); // diary 데이터 푸쉬
+                                                addFeed(openck, B_Theme.getText().toString(), TDate.getText().toString(),
+                                                        diary_content.getText().toString(), time + ".png", imgurl); // diary 데이터 푸쉬
                                             }
                                             //마지막으로 Diary DB에 해당 데이터를 삽입
                                             addDiary(openck, B_Theme.getText().toString(), TDate.getText().toString(),
@@ -320,7 +326,7 @@ public class WDiaryActivity extends AppCompatActivity {
         } else if (ViewId == R.id.iv_clock) {  // 시간 가져오기
             diary_content.setText(getTime2());
 
-        } else if (ViewId == R.id.iv_cam) {  // 시간 가져오기
+        } else if (ViewId == R.id.iv_cam) {  // 사진 가져오기
             loadAlbum();
 
         } else if (ViewId == R.id.b_theme) {//테마 선택창 팝업 메뉴
